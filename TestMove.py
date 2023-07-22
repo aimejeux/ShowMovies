@@ -20,6 +20,8 @@ from enigma import ePoint, eSize, eTimer,ePicLoad
 from enigma import getDesktop, eListboxPythonMultiContent, eListbox, gFont, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_WRAP, loadPNG
 from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmap, MultiContentEntryPixmapAlphaTest, MultiContentEntryPixmapAlphaBlend
 PY3 = version_info[0] == 3
+##################################################################My Imort
+from Plugins.Extensions.ShowMovies.Cimalek.OutilsCimalek.MyImportCimalek import get_My_Donnees,Read_Js,ClearProf,get_D1,get_Info_Film
 def getDesktopSize():
 	s = getDesktop(0).size()
 	return (s.width(), s.height())
@@ -166,6 +168,7 @@ class LinuxsatTestMoveImage(Screen):
 		self['Infos_indx'] = Label()
 		self['Infos_indx'].setText('')
 		self.FoldImag = '/media/hdd/Cimalek/Images/'
+		self.watchBTn = False
 		##############################NewList
 		self.List_Film =['ينطلق دانتي – ابن زعيم الجريمة (هيرنان رييس) – الذي قُتل قبل عشر سنوات للانتقام من البطل دوم توريتو وعائلته وشركائه بعد التسبب في مقتل والده وسرقة أمواله.','تخرج قاتلة محترفة تلقت تدريبًا عسكريًّا من مخبئها لحماية ابنتها التي لم تقابلها قط من فتك مجرمَين عديمَي الرحمة يسعيان للانتقام.','يجد وكيل العمليات الخاصة الفولاذية أن أخلاقه تخضع للاختبار عندما يتسلل إلى نقابة إجرامية ويربط بشكل غير متوقع مع ابن رئيسه الصغير.','يُسافر سباك يُدعى ماريو عبر متاهة تحت الأرض رفقة شقيقه لويجي، وسرعان ما يخوض الثنائي العديد من المغامرات معًا على أمل إنقاذ أميرة.']
 		self.NewList = ['i_0.jpg','i_1.jpg','i_2.jpg','i_3.jpg']
@@ -193,7 +196,7 @@ class LinuxsatTestMoveImage(Screen):
 			"down": self.keyDown,
 			"up": self.keyUp,
 			'ok': self.ok,
-			'green': self.ImportImages,
+			'green': self.Import_My_Watch_Url,
 		}, -1)
 		Screen.__init__(self, session)
 		self.picload = ePicLoad()
@@ -209,11 +212,10 @@ class LinuxsatTestMoveImage(Screen):
 		self.onLayoutFinish.append(self.setText_Films)
 	def ImportImages(self):
 		self.menu = []
-		from Plugins.Extensions.ShowMovies.Cimalek.OutilsCimalek.MyImportCimalek import get_My_Donnees,Read_Js,ClearProf
 		uri = '''https://w.cimalek.to/category/aflam-online/'''
 		uri1= '''https://w.cimalek.to/category/aflam-online/page/2/'''
 		#Msg_ = get_data_Fajre(uri,3)
-		self.Msg_ = get_My_Donnees(uri1)
+		self.Msg_ = get_My_Donnees(uri)
 		#self.session.open(MessageBox, _(str(self.Msg_[1])+'\n'+str(self.Msg_[0])), MessageBox.TYPE_ERROR)
 		if self.Msg_[0]:
 		    self.NewListJS = Read_Js()
@@ -241,13 +243,14 @@ class LinuxsatTestMoveImage(Screen):
 		    v = Msg[tx]
 		    v = v.replace('[','').replace(']','').replace('N/A','...')
 		    self['Box_'+str(tx)].setText(v)
-		self['Box_0'].instance.move(ePoint(519, 35))
-		self['Box_1'].instance.move(ePoint(519, 90))
-		self['Box_2'].instance.move(ePoint(519, 145))
-		self['Box_3'].instance.move(ePoint(519, 200))
+		self['Box_0'].instance.move(ePoint(self.yx, 35))
+		self['Box_1'].instance.move(ePoint(self.yx, 90))
+		self['Box_2'].instance.move(ePoint(self.yx, 145))
+		self['Box_3'].instance.move(ePoint(self.yx, 200))
 		self['Infos'].setText(str(_H[0]))
 		self['Infos'].instance.move(ePoint(self.yx, 835))
 		self.AnimTimer.start(1000//50, True)
+		self['Infos_indx'].setText(str(_H[0]))
 		##############################
 	def layoutFinish(self):
 		for x in range(10):
@@ -278,6 +281,18 @@ class LinuxsatTestMoveImage(Screen):
 		self.yx += self.dyx
 		self['Infos'].instance.move(ePoint(self.yx, 835))
 		#self['Title_Film'].instance.move(ePoint(self.yx, 35))
+		self['Box_0'].instance.move(ePoint(self.yx, 85))
+		self['Box_1'].instance.move(ePoint(self.yx, 135))
+		self['Box_2'].instance.move(ePoint(self.yx, 185))
+		self['Box_3'].instance.move(ePoint(self.yx, 235))
+		if self.yx < self.y22:
+			self.AnimTimer.start(1000//50, True)
+		else:
+			self.AnimTimer.stop()
+	def newupdateLabel555555(self):
+		self.yx += self.dyx
+		self['Infos'].instance.move(ePoint(self.yx, 835))
+		#self['Title_Film'].instance.move(ePoint(self.yx, 35))
 		self['Box_0'].instance.move(ePoint(self.yx, 750))
 		self['Box_1'].instance.move(ePoint(self.yx, 835))
 		self['Box_2'].instance.move(ePoint(self.yx, 885))
@@ -290,7 +305,7 @@ class LinuxsatTestMoveImage(Screen):
 	def keyDown(self):
 		self['menu'].down()
 		idx = self['menu'].getSelectionIndex()
-		self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
+		#self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
 		self.Moveframe()
 		self.decodeImage()
 		self.setText_Films()
@@ -298,7 +313,7 @@ class LinuxsatTestMoveImage(Screen):
 	def keyUp(self):
 		self['menu'].up()
 		idx = self['menu'].getSelectionIndex()
-		self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
+		#self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
 		self.Moveframe()
 		self.decodeImage()
 		self.setText_Films()
@@ -306,7 +321,7 @@ class LinuxsatTestMoveImage(Screen):
 	def left(self):
 		self['menu'].pageUp()
 		idx = self['menu'].getSelectionIndex()
-		self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
+		#self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
 		self.Moveframe()
 		self.decodeImage()
 		self.setText_Films()
@@ -314,7 +329,7 @@ class LinuxsatTestMoveImage(Screen):
 	def right(self):
 		self['menu'].pageDown()
 		idx = self['menu'].getSelectionIndex()
-		self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
+		#self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
 		self.Moveframe()
 		self.decodeImage()
 		self.setText_Films()
@@ -328,7 +343,6 @@ class LinuxsatTestMoveImage(Screen):
 		        V = Nw_List[x-1]
 		        _G = self.NewListJS.items()[V][1]
 		        self['Title_'+str(x)].setText(str(_G[0]))
-		# elif index+7 == Y+1:Ds,Fs =self.index,Y+1#Nw_List=[index,index+1,index+2,index+3,index+4,index+5]
 		elif index+7 > Y:
 		    Nw_List = range(index,Y+1)+[0,1,2,3,4,5,6,7,8]
 		    #self.session.open(MessageBox, _(str(Nw_List)+'\nindex ='+str(index)+'\nY ='+str(Y)), MessageBox.TYPE_ERROR)
@@ -336,8 +350,6 @@ class LinuxsatTestMoveImage(Screen):
 		        V = Nw_List[x]
 		        _G = self.NewListJS.items()[V][1]
 		        self['Title_'+str(x)].setText(str(_G[0]))
-		    # return
-		# else:Ds,Fs =self.index,self.index+7#Nw_List=[index,index+1,index+2,index+3,index+4,index+5]
 		else:
 		    for x in range(1,10):
 		        _G = self.NewListJS.items()[x+index][1]
@@ -345,7 +357,7 @@ class LinuxsatTestMoveImage(Screen):
 		p_1 =self.pagination[0]
 		p_2 =self.pagination[1]
 		_B = 'الصفحة'.encode('utf-8')+'  '+str(p_1)+' / '+str(p_2)
-		self['Infos_indx'].setText(_B)
+		#self['Infos_indx'].setText(_B)
 	##############################
 	def Moveframe(self):
 		self.yx = self.y11
@@ -385,39 +397,10 @@ class LinuxsatTestMoveImage(Screen):
 	##############################
 	def decodeImage(self):
 		self.AnimTimer.stop()
-		# index = self['menu'].getSelectionIndex()
-		# if index % 4 ==0:index=0
-		# elif (index-1) % 4 ==0:index=1
-		# elif (index-2) % 4 ==0:index=2
-		# else: index=3
-		# for b in range(7):
-			# if b == 0:
-				# self['poster_'+str(b)].instance.move(ePoint(self.Positions[b][0], self.Positions[b][1]))
-				# self.decodeImage_50(b)
-			# else:
-				# self['poster_'+str(b)].instance.move(ePoint(self.Positions[b][0], self.Positions[b][1]))
 		self.decodeImage_6(0)
 	##############################
 	def decodeImage_50(self,b):
 		self['poster_'+str(b)].instance.resize(eSize(500, 750))#######185,278
-	##############################
-	# def decodeImage_Big(self,b):
-		# self.index = self['menu'].getSelectionIndex()
-		# _H = self.NewListJS.items()[self.index][1]
-		# picfile = self.FoldImag+str(_H[3])
-		# picobject = self['poster_'+str(b)]	
-		# picobject.instance.setPixmap(gPixmapPtr())
-		# self.scale = AVSwitch().getFramebufferScale()
-		# self.picload = ePicLoad()
-		# #size = picobject.instance.size()
-		# self.picload.setPara((700, 950,0,0,0,0,'#80000000'))
-		# if self.picload.startDecode(picfile, 0, 0, False) == 0:
-			# ptr = self.picload.getData()
-			# if ptr != None:
-				# picobject.instance.setPixmap(ptr)
-				# picobject.show()
-				# del self.picload
-		# return
 	##############################
 	def decodeImage_6(self,cty):
 		Ds , Fs = 0,0
@@ -467,20 +450,11 @@ class LinuxsatTestMoveImage(Screen):
 		            picobject.instance.setPixmap(ptr)
 		            picobject.show()
 		            del self.picload
-		#return
+	##############################				
 	def decodeImage_uniq_2(self,indx):
 		Nw_List = []
 		Y = len(self.NewListJS)-1
 		Nw_List = range(indx,Y+1)+[0,1,2,3,4,5,6,7,8,9]
-		#Listos = [0,1,2,3,4,5]
-		#self.session.open(MessageBox, _('Long = '+str(Nw_List)+'\n indx = '+str(indx)+'\nY = '+str(Y)), MessageBox.TYPE_ERROR)
-		# if indx == Y-2:
-		    # Nw_List =[Y-2,Y-1,Y,0,1,2]
-		    # self.session.open(MessageBox, _('111111\n'+str(Nw_List)), MessageBox.TYPE_ERROR)
-		# else:
-		    # Nw_List =[Y-1,Y,0,1,2,3]
-		    # self.session.open(MessageBox, _('222222\n'+str(Nw_List)), MessageBox.TYPE_ERROR)
-		#for f in Nw_List:
 		for f in range(1,11):
 		    f1 = Nw_List[f-1]
 		    _H = self.NewListJS.items()[f1][1]
@@ -491,7 +465,6 @@ class LinuxsatTestMoveImage(Screen):
 		    size = picobject.instance.size()
 		    self.picload = ePicLoad()
 		    if f1 == indx:self.picload.setPara((500,700,0,0,0,0,'#80000000'))
-		    #if Nw_List.index(f) == 0:self.picload.setPara((500,750,0,0,0,0,'#80000000'))
 		    else:self.picload.setPara((185,278,0,0,0,0,'#80000000'))
 		    if self.picload.startDecode(picfile, 0, 0, False) == 0:
 		        ptr = self.picload.getData()
@@ -499,11 +472,36 @@ class LinuxsatTestMoveImage(Screen):
 		            picobject.instance.setPixmap(ptr)
 		            picobject.show()
 		            del self.picload
-		#return
+	##############################
+	def Import_My_Watch_Url(self):
+		from enigma import eServiceReference
+		from Screens.InfoBar import InfoBar, MoviePlayer
+		MyFilms = ['nada']
+		if self.watchBTn:
+		    sft,_Df = get_D1(self.watc)
+		    if sft:
+		        MyFilms = _Df
+		        if len(_Df)!=0:
+		            stream_url = _Df[0][1]
+		            name = self['menu'].getCurrent()[0]
+		            self.reference = eServiceReference(5002, 0, stream_url.encode('utf-8'))
+		            self.reference.setName(name)
+		            self.session.open(MoviePlayer,self.reference)
+		        else:self.session.open(MessageBox, _('Not Data Film'), MessageBox.TYPE_ERROR)
+	def Import_My_Infos(self):
+		index = self['menu'].getSelectionIndex()
+		_H = self.NewListJS.items()[index][1][1]
+		_Info = get_Info_Film(_H)
+		self.watc = ''
+		try:
+		    self.watc = _Info.get('watchBTn','')
+		    self.watchBTn = True
+		except:self.watc = 'nada'
+		self.session.open(MessageBox, _('watchBTn = '+str(self.watc)+'\n'+str(_H)+'\n'+str(_Info)), MessageBox.TYPE_ERROR)
 	##############################
 	def ok(self):
 		self.AnimTimer.stop()
-		self.exit()
+		self.Import_My_Infos()
 	##############################
 	def exit(self, ret=None):
 		self.close(True)
