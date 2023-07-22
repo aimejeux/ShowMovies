@@ -88,19 +88,15 @@ def Read_Js():
 def get_Data(url,get='',typ='',param=None,headers=None):
     _Data = ''
     if param and headers:
-        #print '_________________1'
         try:exec "_Data = St."+get+"(url,data=param,heades=headers,verify=False,timeout=10)."+typ
         except:_Data = ''
     elif param and not headers:
-        #print '_________________2'
         try:exec "_Data = St."+get+"(url,data=param,verify=False,timeout=10)."+typ
         except:_Data = ''
     elif headers and not param :
-        #print '_________________3'
         try:exec "_Data = St."+get+"(url,heades=headers,verify=False,timeout=10)."+typ
         except:_Data = ''
     else :
-        #print '_________________4'        
         try: exec "_Data=St."+get+"(url,verify=False,timeout=10)."+typ
         except:_Data = '' 
     return _Data
@@ -108,15 +104,13 @@ def get_Data(url,get='',typ='',param=None,headers=None):
 def get_My_Donnees(url):
     MyDict_ = {}
     Donnees = get_Data(url,get='get',typ='content')
-    if Donnees == '':return False,Donnees
+    if Donnees == '':return False,Donnees,''
     tmx = '''<div class="pagination-tol"><span>(.+?)</span>'''
     try:
         pagination = re.findall(tmx,Donnees,re.M|re.I|re.DOTALL)[0].decode('utf-8')
         pagination = ClearTitle(pagination)
         pagination = pagination.split()
     except:pagination='nada'
-    pagination
-    #print pagination
     blocks=Donnees.split('<div class="film-poster"')
     blocks.pop(0)
     i = 1
@@ -132,7 +126,6 @@ def get_My_Donnees(url):
             Href = re.findall(rgx,block,re.M|re.I|re.DOTALL)[0]
         except:
             Href= 'nada'
-        #print Href
         try:
             rgx = '''<img class="film-poster-img lazy" data-src="(.+?)"'''
             img = re.findall(rgx,block,re.M|re.I|re.DOTALL)[0]
@@ -172,14 +165,4 @@ def get_My_Donnees(url):
         #print "==========================================",str(i)
         i = i + 1
     TXT = json.dumps(MyDict_)
-    # for keys in MyDict_:
-        # print keys
     return True,export_txt(TXT),pagination
-#url = "https://w.cimalek.to/category/aflam-online/"
-#print get_My_Donnees(url)
-# MonJs = Read_Js()
-# for keys in MonJs:
-    # print keys
-    # for a in MonJs[keys]:
-        # print a
-    # print "==========================================================="
