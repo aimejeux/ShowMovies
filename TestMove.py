@@ -166,14 +166,17 @@ class LinuxsatTestMoveImage(Screen):
 		self['Infos_indx'] = Label()
 		self['Infos_indx'].setText('')
 		self.FoldImag = '/media/hdd/Cimalek/Images/'
-		##############################poster_
+		##############################NewList
+		self.List_Film =['ينطلق دانتي – ابن زعيم الجريمة (هيرنان رييس) – الذي قُتل قبل عشر سنوات للانتقام من البطل دوم توريتو وعائلته وشركائه بعد التسبب في مقتل والده وسرقة أمواله.','تخرج قاتلة محترفة تلقت تدريبًا عسكريًّا من مخبئها لحماية ابنتها التي لم تقابلها قط من فتك مجرمَين عديمَي الرحمة يسعيان للانتقام.','يجد وكيل العمليات الخاصة الفولاذية أن أخلاقه تخضع للاختبار عندما يتسلل إلى نقابة إجرامية ويربط بشكل غير متوقع مع ابن رئيسه الصغير.','يُسافر سباك يُدعى ماريو عبر متاهة تحت الأرض رفقة شقيقه لويجي، وسرعان ما يخوض الثنائي العديد من المغامرات معًا على أمل إنقاذ أميرة.']
+		self.NewList = ['i_0.jpg','i_1.jpg','i_2.jpg','i_3.jpg']
+		self.NewListTitle = ['Fast X','The Mother','AKA','The Super Mario Bros. Movie']
 		for x in range(10):
 			self['poster_'+str(x)] = Pixmap()
 			self['poster_'+str(x)].show()
-		##############################Box_
+			#self.Dist = PLUGIN_PATH+str(x)+'.png'
 		for x in range(4):
 		    self['Box_'+str(x)] = Label()
-		for x in range(1,7):
+		for x in range(1,10):
 		    self['Title_'+str(x)] = Label()
 		self.NewListJS = {}
 		##############################Timer
@@ -181,8 +184,8 @@ class LinuxsatTestMoveImage(Screen):
 		self.Timer = eTimer()
 		self.AnimTimer = eTimer()
 		self.timer = eTimer()
-		#self.Timer.callback.append(self.updatePoster)
-		#self.AnimTimer.callback.append(self.newupdateLabel)
+		self.Timer.callback.append(self.updatePoster)
+		self.AnimTimer.callback.append(self.newupdateLabel)
 		##############################
 		self['actions'] = ActionMap(['ShowMoviesPanelActions'], {'cancel': self.exit,
 			'left': self.left,
@@ -201,7 +204,7 @@ class LinuxsatTestMoveImage(Screen):
 		self.getposi_image()
 		self.ImportImages()
 		self.onLayoutFinish.append(self.decodeImage)
-		#self.onLayoutFinish.append(self.layoutFinish)
+		self.onLayoutFinish.append(self.layoutFinish)
 		self.onLayoutFinish.append(self.newlayoutFinish)
 		self.onLayoutFinish.append(self.setText_Films)
 	def ImportImages(self):
@@ -244,43 +247,43 @@ class LinuxsatTestMoveImage(Screen):
 		self['Box_3'].instance.move(ePoint(519, 200))
 		self['Infos'].setText(str(_H[0]))
 		self['Infos'].instance.move(ePoint(self.yx, 835))
-		#self.AnimTimer.start(100//50, True)
+		self.AnimTimer.start(1000//50, True)
 		##############################
 	def layoutFinish(self):
-		for x in range(7):
+		for x in range(10):
 		    self['poster_'+str(x)].instance.move(ePoint(0, 1080))
-		self.Timer.start(100//60, True)
+		self.Timer.start(1000//60, True)
 		##############################
 	def updatePoster(self):
-		self.y -= 50#self.dy
-		self['poster_0'].instance.move(ePoint(5, self.y))
+		self.y -= self.dy
+		self['poster_0'].instance.move(ePoint(5, self.y-800))
 		self['poster_1'].instance.move(ePoint(5, self.y))
 		self['poster_2'].instance.move(ePoint(218, self.y))
 		self['poster_3'].instance.move(ePoint(431, self.y))
 		self['poster_4'].instance.move(ePoint(644, self.y))
 		self['poster_5'].instance.move(ePoint(857, self.y))
 		self['poster_6'].instance.move(ePoint(1070, self.y))
-		# self['poster_7'].instance.move(ePoint(1283, self.y))
-		# self['poster_8'].instance.move(ePoint(1496, self.y))
-		# self['poster_9'].instance.move(ePoint(1709, self.y))
+		self['poster_7'].instance.move(ePoint(1283, self.y))
+		self['poster_8'].instance.move(ePoint(1496, self.y))
+		self['poster_9'].instance.move(ePoint(1709, self.y))
 		#Write_Donnees(str(self.y)+"--------")
-		if self.y < 37:
-			self.Timer.start(50//60, True)
+		if self.y > 792:#if self.y > self.y2:
+			self.Timer.start(1000//60, True)
 		else:
 			self.Timer.stop()
 			p = self['poster_0'].instance.position()
 			#self.session.open(MessageBox, _(str(p.x())+'     '+str(p.y())), MessageBox.TYPE_ERROR)
 	##############################
 	def newupdateLabel(self):
-		self.yx += 100#self.dyx
+		self.yx += self.dyx
 		self['Infos'].instance.move(ePoint(self.yx, 835))
 		#self['Title_Film'].instance.move(ePoint(self.yx, 35))
 		self['Box_0'].instance.move(ePoint(self.yx, 750))
 		self['Box_1'].instance.move(ePoint(self.yx, 835))
 		self['Box_2'].instance.move(ePoint(self.yx, 885))
 		self['Box_3'].instance.move(ePoint(self.yx, 935))
-		if self.yx < 519:
-			self.AnimTimer.start(50//50, True)
+		if self.yx < self.y22:
+			self.AnimTimer.start(1000//50, True)
 		else:
 			self.AnimTimer.stop()
 	##############################
@@ -288,7 +291,7 @@ class LinuxsatTestMoveImage(Screen):
 		self['menu'].down()
 		idx = self['menu'].getSelectionIndex()
 		self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
-		#self.Moveframe()
+		self.Moveframe()
 		self.decodeImage()
 		self.setText_Films()
 	##############################
@@ -296,7 +299,7 @@ class LinuxsatTestMoveImage(Screen):
 		self['menu'].up()
 		idx = self['menu'].getSelectionIndex()
 		self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
-		#self.Moveframe()
+		self.Moveframe()
 		self.decodeImage()
 		self.setText_Films()
 	##############################
@@ -304,7 +307,7 @@ class LinuxsatTestMoveImage(Screen):
 		self['menu'].pageUp()
 		idx = self['menu'].getSelectionIndex()
 		self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
-		#self.Moveframe()
+		self.Moveframe()
 		self.decodeImage()
 		self.setText_Films()
 	##############################
@@ -312,7 +315,7 @@ class LinuxsatTestMoveImage(Screen):
 		self['menu'].pageDown()
 		idx = self['menu'].getSelectionIndex()
 		self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
-		#self.Moveframe()
+		self.Moveframe()
 		self.decodeImage()
 		self.setText_Films()
 	##############################
@@ -320,22 +323,23 @@ class LinuxsatTestMoveImage(Screen):
 		index = self['menu'].getSelectionIndex()
 		Y = len(self.NewListJS)-1
 		if index == Y:
-		    Nw_List =[0,1,2,3,4,5]
-		    for x in range(1,7):
+		    Nw_List =[0,1,2,3,4,5,6,7,8]
+		    for x in range(1,10):
 		        V = Nw_List[x-1]
 		        _G = self.NewListJS.items()[V][1]
 		        self['Title_'+str(x)].setText(str(_G[0]))
+		# elif index+7 == Y+1:Ds,Fs =self.index,Y+1#Nw_List=[index,index+1,index+2,index+3,index+4,index+5]
 		elif index+7 > Y:
-		    Nw_List = range(index,Y+1)+[0,1,2,3,4,5,6]
-		    self.session.open(MessageBox, _(str(Nw_List)+'\nindex ='+str(index)+'\nY ='+str(Y)), MessageBox.TYPE_ERROR)
-		    for x in range(1,7):
+		    Nw_List = range(index,Y+1)+[0,1,2,3,4,5,6,7,8]
+		    #self.session.open(MessageBox, _(str(Nw_List)+'\nindex ='+str(index)+'\nY ='+str(Y)), MessageBox.TYPE_ERROR)
+		    for x in range(1,10):
 		        V = Nw_List[x]
 		        _G = self.NewListJS.items()[V][1]
 		        self['Title_'+str(x)].setText(str(_G[0]))
 		    # return
 		# else:Ds,Fs =self.index,self.index+7#Nw_List=[index,index+1,index+2,index+3,index+4,index+5]
 		else:
-		    for x in range(1,7):
+		    for x in range(1,10):
 		        _G = self.NewListJS.items()[x+index][1]
 		        self['Title_'+str(x)].setText(str(_G[0]))
 		p_1 =self.pagination[0]
@@ -349,7 +353,7 @@ class LinuxsatTestMoveImage(Screen):
 		if self.newupdateLabel in self.AnimTimer.callback:
 		    self.AnimTimer.callback.remove(self.newupdateLabel)
 		    self.AnimTimer.callback.append(self.showDescAnim)
-		self.AnimTimer.start(50//50, True)
+		self.AnimTimer.start(1000//50, True)
 	##############################
 	def showDescAnim(self):
 		index = self['menu'].getSelectionIndex()
@@ -363,15 +367,15 @@ class LinuxsatTestMoveImage(Screen):
 		    v = Msg[tx]
 		    v = v.replace('[','').replace(']','').replace('N/A','...')
 		    self['Box_'+str(tx)].setText(v)
-		self.yx += 100#self.dyx
+		self.yx += self.dyx
 		self['Infos'].setText(str(_H[0]))
 		self['Infos'].instance.move(ePoint(self.yx, 835))
 		self['Box_0'].instance.move(ePoint(self.yx, 35))
 		self['Box_1'].instance.move(ePoint(self.yx, 90))
 		self['Box_2'].instance.move(ePoint(self.yx, 145))
 		self['Box_3'].instance.move(ePoint(self.yx, 200))
-		if self.yx < 519:#if self.yx < self.y22:
-			self.AnimTimer.start(50//50, True)
+		if self.yx < self.y22:#if self.yx < 519:#if self.yx < self.y22:
+			self.AnimTimer.start(1000//50, True)
 		else:
 			self.AnimTimer.stop()
 	##############################
@@ -386,16 +390,34 @@ class LinuxsatTestMoveImage(Screen):
 		# elif (index-1) % 4 ==0:index=1
 		# elif (index-2) % 4 ==0:index=2
 		# else: index=3
-		for b in range(7):
-			if b == 0:
-				self['poster_'+str(b)].instance.move(ePoint(self.Positions[b][0], self.Positions[b][1]))
-				self.decodeImage_50(b)
-			else:
-				self['poster_'+str(b)].instance.move(ePoint(self.Positions[b][0], self.Positions[b][1]))
-			self.decodeImage_6(b)
+		# for b in range(7):
+			# if b == 0:
+				# self['poster_'+str(b)].instance.move(ePoint(self.Positions[b][0], self.Positions[b][1]))
+				# self.decodeImage_50(b)
+			# else:
+				# self['poster_'+str(b)].instance.move(ePoint(self.Positions[b][0], self.Positions[b][1]))
+		self.decodeImage_6(0)
 	##############################
 	def decodeImage_50(self,b):
 		self['poster_'+str(b)].instance.resize(eSize(500, 750))#######185,278
+	##############################
+	# def decodeImage_Big(self,b):
+		# self.index = self['menu'].getSelectionIndex()
+		# _H = self.NewListJS.items()[self.index][1]
+		# picfile = self.FoldImag+str(_H[3])
+		# picobject = self['poster_'+str(b)]	
+		# picobject.instance.setPixmap(gPixmapPtr())
+		# self.scale = AVSwitch().getFramebufferScale()
+		# self.picload = ePicLoad()
+		# #size = picobject.instance.size()
+		# self.picload.setPara((700, 950,0,0,0,0,'#80000000'))
+		# if self.picload.startDecode(picfile, 0, 0, False) == 0:
+			# ptr = self.picload.getData()
+			# if ptr != None:
+				# picobject.instance.setPixmap(ptr)
+				# picobject.show()
+				# del self.picload
+		# return
 	##############################
 	def decodeImage_6(self,cty):
 		Ds , Fs = 0,0
@@ -403,11 +425,11 @@ class LinuxsatTestMoveImage(Screen):
 		if self.index == len(self.NewListJS)-1:
 		    self.decodeImage_uniq()
 		    return
-		elif self.index+7 == len(self.NewListJS):Ds,Fs =self.index,len(self.NewListJS)
-		elif self.index+7 > len(self.NewListJS):
+		elif self.index+10 == len(self.NewListJS):Ds,Fs =self.index,len(self.NewListJS)
+		elif self.index+10 > len(self.NewListJS):
 		    self.decodeImage_uniq_2(self.index)
 		    return
-		else:Ds,Fs =self.index,self.index+7
+		else:Ds,Fs =self.index,self.index+10
 		for f in range(self.index,Fs):
 		    _H = self.NewListJS.items()[f][1]
 		    picfile = self.FoldImag+str(_H[3])
@@ -416,7 +438,7 @@ class LinuxsatTestMoveImage(Screen):
 		    self.scale = AVSwitch().getFramebufferScale()
 		    self.picload = ePicLoad()
 		    size = picobject.instance.size()
-		    if f-self.index == 0:self.picload.setPara((500,750,0,0,0,0,'#80000000'))
+		    if f-self.index == 0:self.picload.setPara((500,700,0,0,0,0,'#80000000'))
 		    else:self.picload.setPara((185,278,0,0,0,0,'#80000000'))
 		    if self.picload.startDecode(picfile, 0, 0, False) == 0:
 		        ptr = self.picload.getData()
@@ -426,7 +448,7 @@ class LinuxsatTestMoveImage(Screen):
 		            del self.picload
 		return
 	def decodeImage_uniq(self):
-		Nw_List =[len(self.NewListJS)-1,0,1,2,3,4,5,6]
+		Nw_List =[len(self.NewListJS)-1,0,1,2,3,4,5,6,7,8]
 		for f in Nw_List:
 		    _H = self.NewListJS.items()[f][1]
 		    picfile = self.FoldImag+str(_H[3])
@@ -437,7 +459,7 @@ class LinuxsatTestMoveImage(Screen):
 		    self.scale = AVSwitch().getFramebufferScale()
 		    size = picobject.instance.size()
 		    self.picload = ePicLoad()
-		    if T == 0:self.picload.setPara((500,750,0,0,0,0,'#80000000'))
+		    if T == 0:self.picload.setPara((500,700,0,0,0,0,'#80000000'))
 		    else:self.picload.setPara((185,278,0,0,0,0,'#80000000'))
 		    if self.picload.startDecode(picfile, 0, 0, False) == 0:
 		        ptr = self.picload.getData()
@@ -449,8 +471,17 @@ class LinuxsatTestMoveImage(Screen):
 	def decodeImage_uniq_2(self,indx):
 		Nw_List = []
 		Y = len(self.NewListJS)-1
-		Nw_List = range(indx,Y+1)+[0,1,2,3,4,5,6]
-		for f in range(1,8):
+		Nw_List = range(indx,Y+1)+[0,1,2,3,4,5,6,7,8,9]
+		#Listos = [0,1,2,3,4,5]
+		#self.session.open(MessageBox, _('Long = '+str(Nw_List)+'\n indx = '+str(indx)+'\nY = '+str(Y)), MessageBox.TYPE_ERROR)
+		# if indx == Y-2:
+		    # Nw_List =[Y-2,Y-1,Y,0,1,2]
+		    # self.session.open(MessageBox, _('111111\n'+str(Nw_List)), MessageBox.TYPE_ERROR)
+		# else:
+		    # Nw_List =[Y-1,Y,0,1,2,3]
+		    # self.session.open(MessageBox, _('222222\n'+str(Nw_List)), MessageBox.TYPE_ERROR)
+		#for f in Nw_List:
+		for f in range(1,11):
 		    f1 = Nw_List[f-1]
 		    _H = self.NewListJS.items()[f1][1]
 		    picfile = self.FoldImag+str(_H[3])
@@ -459,7 +490,7 @@ class LinuxsatTestMoveImage(Screen):
 		    self.scale = AVSwitch().getFramebufferScale()
 		    size = picobject.instance.size()
 		    self.picload = ePicLoad()
-		    if f1 == indx:self.picload.setPara((500,750,0,0,0,0,'#80000000'))
+		    if f1 == indx:self.picload.setPara((500,700,0,0,0,0,'#80000000'))
 		    #if Nw_List.index(f) == 0:self.picload.setPara((500,750,0,0,0,0,'#80000000'))
 		    else:self.picload.setPara((185,278,0,0,0,0,'#80000000'))
 		    if self.picload.startDecode(picfile, 0, 0, False) == 0:
@@ -468,6 +499,7 @@ class LinuxsatTestMoveImage(Screen):
 		            picobject.instance.setPixmap(ptr)
 		            picobject.show()
 		            del self.picload
+		#return
 	##############################
 	def ok(self):
 		self.AnimTimer.stop()
