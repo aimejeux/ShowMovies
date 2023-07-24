@@ -8,6 +8,7 @@ from Screens.MessageBox import MessageBox
 from Components.Pixmap import Pixmap
 from enigma import ePixmap, eTimer, ePoint, gPixmapPtr
 from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS
+from Components.Sources.StaticText import StaticText
 import json
 import os
 from sys import version_info
@@ -19,6 +20,10 @@ from Tools.BoundFunction import boundFunction
 from enigma import ePoint, eSize, eTimer,ePicLoad
 from enigma import getDesktop, eListboxPythonMultiContent, eListbox, gFont, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_WRAP, loadPNG
 from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmap, MultiContentEntryPixmapAlphaTest, MultiContentEntryPixmapAlphaBlend
+################################################ yasser
+black,white,gray='\c00000000','\c00??????','\c00808080'
+blue,green,red,yellow,cyan,magenta,ivory='\c000000??','\c0000??00','\c00??0000','\c00????00','\c0000????','\c00??00??','\c0???????'
+################################################ yasser
 PY3 = version_info[0] == 3
 ##################################################################My Imort
 from Plugins.Extensions.ShowMovies.Cimalek.OutilsCimalek.MyImportCimalek import get_My_Donnees,Read_Js,ClearProf,get_D1,get_Info_Film
@@ -55,11 +60,18 @@ def is_ascii(s):
 from enigma import iPlayableService, iServiceInformation, eServiceCenter, eServiceReference, iFrontendInformation, eTimer , gRGB , eConsoleAppContainer
 from ServiceReference import ServiceReference
 from Components.ServiceEventTracker import ServiceEventTracker
+def Write_Donnees(txt):
+    Path = '/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/dimimage.txt'
+    outfile = open(Path, 'a')
+    outfile.write(txt)
+    outfile.close()
+    #print 'Cool'
 def colorize(txt,selcolor='white',marker1="[",marker2="]"):
     txt = txt.replace(',','')
     #txt = txt.replace('.','')
     if enigmaos == "oe2.2" or  is_ascii(txt)==False:
         return txt
+    #else:txt = txt.encode('utf-8')
     colors={'black':'\c00000000','white':'\c00??????','grey':'\c00808080',
     'blue':'\c000000??','green':'\c0000??00','red':'\c00??0000','ivory':"\c0???????",
     'yellow':'\c00????00','cyan':'\\c0000????','magenta':'\c00??00??'}
@@ -68,24 +80,46 @@ def colorize(txt,selcolor='white',marker1="[",marker2="]"):
     try:
         if not marker1 in txt :
             txt = txt.split()
-            return color+" "+str(txt[0])+color+" "+str(txt[1])+color+" "+str(txt[2])
+            tx = ''
+            for tx in txt:
+                tx+=color+" "+tx
+            Write_Donnees('\n0-----------------'+tx+'\n'+str(type(tx))+'\n')
+            return tx#color+" "+str(txt[0])+color+" "+str(txt[1])+color+" "+str(txt[2])
         txtparts=txt.split(marker1)
         txt1=txtparts[0]
         txt2=txtparts[1]
-        if marker2 in txt:
-            txt3=txt2.split(marker2)#[0]
-            if len(txt3)>=2:
-                if txt3[1]!='':
-                    txt3,txt4 = txt3[0],txt3[1]
-                    ftxt=txt1+" "+color+marker1+txt3+marker2+color1+txt4
-                else:
-                    txt3= txt3[0]
-                    ftxt=txt1+" "+color+marker1+txt3+marker2
-        else:
-            txt3=txt2
-            ftxt=txt1+" "+color+marker1+txt3+marker2
-        return ftxt
+        try:
+            txt2 = txt2.decode('utf-8')
+        except:txt2=txt2
+        Write_Donnees('\n1-----------------'+txt1+'\n'+txt2+'\n')
+        if marker2 in txt2:
+            Write_Donnees('\n2-----------------'+txt2+'++++++++++++'+str(type(txt2))+'\n')
+            txtos = ''
+            txt2 = txt2.replace(']','')
+            txt3=txt2.split()
+            for txto in txt3:
+                try:
+                    txto = txto.decode('utf-8')
+                    txtos+=" "+color+txto
+                except:txtos+=" "+color+txto
+            Write_Donnees('\n3-----------------'+txto+'++++++++++++'+str(type(txto))+'\n')
+            return txt1+txtos
+			
+        # if marker2 in txt:
+            # txt3=txt2.split(marker2)#[0]
+            # if len(txt3)>=2:
+                # if txt3[1]!='':
+                    # txt3,txt4 = txt3[0],txt3[1]
+                    # ftxt=txt1+" "+color+marker1+txt3+marker2+color1+txt4
+                # else:
+                    # txt3= txt3[0]
+                    # ftxt=txt1+" "+color+marker1+txt3+marker2
+        # else:
+            # txt3=txt2
+            # ftxt=txt1+" "+color+marker1+txt3+marker2
+        # return ftxt
     except:
+        Write_Donnees(txt+'--------------------------probleme '+str(type(txt))+'\n')
         return txt
 #########################################
 def getversioninfo():
@@ -124,12 +158,6 @@ def show_VPN(Prblm):
 PLUGIN_PATH = '/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/i_'
 PLUGIN_PATH_SKIN = '/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Skins'
 #########################################
-def Write_Donnees(txt):
-    Path = '/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/dimimage.txt'
-    outfile = open(Path, 'a')
-    outfile.write(txt)
-    outfile.close()
-    #print 'Cool'
 dwidth = getDesktop(0).size().width()
 #########################################
 ############start of list
@@ -162,6 +190,7 @@ class LinuxsatTestMoveImage(Screen):
 		self['poster_2'] = Pixmap()
 		self['poster_3'] = Pixmap()
 		##############################Label
+		self['rating'] =StaticText()
 		self['Title_Film'] = Label()
 		self['Infos'] = Label()
 		self['Infos'].setText('Test Move Text')
@@ -177,7 +206,7 @@ class LinuxsatTestMoveImage(Screen):
 			self['poster_'+str(x)] = Pixmap()
 			self['poster_'+str(x)].show()
 			#self.Dist = PLUGIN_PATH+str(x)+'.png'
-		for x in range(4):
+		for x in range(9):
 		    self['Box_'+str(x)] = Label()
 		for x in range(1,10):
 		    self['Title_'+str(x)] = Label()
@@ -225,37 +254,39 @@ class LinuxsatTestMoveImage(Screen):
 		        self.menu.append(show_VPN(str(Prblm)))
 		    self.pagination = self.Msg_[2]
 		else:
-		    self.session.open(MessageBox, _(str(self.Msg_[0])), MessageBox.TYPE_ERROR)
 		    self.menu.append(show_VPN('Not Data'))
 		self['menu'].l.setList(self.menu)
 		self['menu'].l.setItemHeight(35)
 		#self.session.open(MessageBox, _(str(_dons)), MessageBox.TYPE_ERROR)
 		##############################List_Film
-	def newlayoutFinish(self):
-		index = self['menu'].getSelectionIndex()
-		_H = self.NewListJS.items()[index][1]
-		a = colorize('Title        :  ['+str(_H[0])+']',selcolor='cyan')
-		b = colorize('Rating     :  ['+str(_H[4])+']',selcolor='cyan')
-		c = colorize('Quality    :  ['+str(_H[5])+']',selcolor='cyan')
-		d = colorize('Descpt    :  '+str(_H[6]),selcolor='cyan')
-		Msg = [a,b,c,d]
-		for tx in range(4):
-		    v = Msg[tx]
-		    v = v.replace('[','').replace(']','').replace('N/A','...')
-		    self['Box_'+str(tx)].setText(v)
-		self['Box_0'].instance.move(ePoint(self.yx, 35))
-		self['Box_1'].instance.move(ePoint(self.yx, 90))
-		self['Box_2'].instance.move(ePoint(self.yx, 145))
-		self['Box_3'].instance.move(ePoint(self.yx, 200))
-		self['Infos'].setText(str(_H[0]))
-		self['Infos'].instance.move(ePoint(self.yx, 835))
-		self.AnimTimer.start(1000//50, True)
-		self['Infos_indx'].setText(str(_H[0]))
+	def newlayoutFinish(self):#
+		if self.Msg_[0]:
+		    index = self['menu'].getSelectionIndex()
+		    _H = self.NewListJS.items()[index][1]
+		    a = 'Title        :  \c0000????'+str(_H[0])
+		    b = 'Rating     :  \c0000????'+str(_H[4])
+		    c = 'Quality    :  \c0000????'+str(_H[5])
+		    d = 'Descpt    :  \c0000????'+str(_H[6])
+		    Msg = [a,b,c,d]
+		    self['rating'].setText(_H[4])
+		    for tx in range(4):
+		        v = Msg[tx]
+		        v = v.replace('[','').replace(']','').replace('N/A','...')
+		        self['Box_'+str(tx)].setText(str(v))
+		    self['Box_0'].instance.move(ePoint(self.yx, 35))
+		    self['Box_1'].instance.move(ePoint(self.yx, 90))
+		    self['Box_2'].instance.move(ePoint(self.yx, 145))
+		    self['Box_3'].instance.move(ePoint(self.yx, 200))
+		    self['Infos'].setText(str(_H[0]))
+		    self['Infos'].instance.move(ePoint(self.yx, 835))
+		    self.AnimTimer.start(1000//50, True)
+		    self['Infos_indx'].setText(str(_H[0]))
 		##############################
 	def layoutFinish(self):
-		for x in range(10):
-		    self['poster_'+str(x)].instance.move(ePoint(0, 1080))
-		self.Timer.start(1000//60, True)
+		if self.Msg_[0]:
+		    for x in range(10):
+		        self['poster_'+str(x)].instance.move(ePoint(0, 1080))
+		    self.Timer.start(1000//60, True)
 		##############################
 	def updatePoster(self):
 		self.y -= self.dy
@@ -274,17 +305,17 @@ class LinuxsatTestMoveImage(Screen):
 			self.Timer.start(1000//60, True)
 		else:
 			self.Timer.stop()
-			p = self['poster_0'].instance.position()
+			#p = self['poster_0'].instance.position()
 			#self.session.open(MessageBox, _(str(p.x())+'     '+str(p.y())), MessageBox.TYPE_ERROR)
 	##############################
 	def newupdateLabel(self):
 		self.yx += self.dyx
 		self['Infos'].instance.move(ePoint(self.yx, 835))
 		#self['Title_Film'].instance.move(ePoint(self.yx, 35))
-		self['Box_0'].instance.move(ePoint(self.yx, 85))
-		self['Box_1'].instance.move(ePoint(self.yx, 135))
-		self['Box_2'].instance.move(ePoint(self.yx, 185))
-		self['Box_3'].instance.move(ePoint(self.yx, 235))
+		self['Box_0'].instance.move(ePoint(self.yx+500, 5))
+		self['Box_1'].instance.move(ePoint(self.yx+500, 55))
+		self['Box_2'].instance.move(ePoint(self.yx+500, 110))
+		self['Box_3'].instance.move(ePoint(self.yx+500, 165))
 		if self.yx < self.y22:
 			self.AnimTimer.start(1000//50, True)
 		else:
@@ -335,6 +366,8 @@ class LinuxsatTestMoveImage(Screen):
 		self.setText_Films()
 	##############################
 	def setText_Films(self):
+		if self.Msg_[0]:self.setText_Films_1()
+	def setText_Films_1(self):
 		index = self['menu'].getSelectionIndex()
 		Y = len(self.NewListJS)-1
 		if index == Y:
@@ -360,44 +393,80 @@ class LinuxsatTestMoveImage(Screen):
 		#self['Infos_indx'].setText(_B)
 	##############################
 	def Moveframe(self):
-		self.yx = self.y11
-		self.dyx = (self.y22 - self.y11) // 40
-		if self.newupdateLabel in self.AnimTimer.callback:
-		    self.AnimTimer.callback.remove(self.newupdateLabel)
-		    self.AnimTimer.callback.append(self.showDescAnim)
-		self.AnimTimer.start(1000//50, True)
-	##############################
+		#self.session.open(MessageBox, _(str(self.Msg_[0])), MessageBox.TYPE_ERROR)
+		#if self.Msg_[0]:
+		    self.yx = self.y11
+		    self.dyx = (self.y22 - self.y11) // 40
+		    if self.newupdateLabel in self.AnimTimer.callback:
+		        self.AnimTimer.callback.remove(self.newupdateLabel)
+		        self.AnimTimer.callback.append(self.showDescAnim)
+		    self.AnimTimer.start(1000//50, True)
+	##############################\c0000????
 	def showDescAnim(self):
-		index = self['menu'].getSelectionIndex()
-		_H = self.NewListJS.items()[index][1]
-		a = colorize('Title    :  ['+str(_H[0])+']',selcolor='cyan')
-		b = colorize('Rating    :  ['+str(_H[4])+']',selcolor='cyan')
-		c = colorize('Quality    :  ['+str(_H[5])+']',selcolor='cyan')
-		d = colorize('Descpt    :  '+str(_H[6]),selcolor='cyan')
-		Msg = [a,b,c,d]
-		for tx in range(4):
-		    v = Msg[tx]
-		    v = v.replace('[','').replace(']','').replace('N/A','...')
-		    self['Box_'+str(tx)].setText(v)
-		self.yx += self.dyx
-		self['Infos'].setText(str(_H[0]))
-		self['Infos'].instance.move(ePoint(self.yx, 835))
-		self['Box_0'].instance.move(ePoint(self.yx, 35))
-		self['Box_1'].instance.move(ePoint(self.yx, 90))
-		self['Box_2'].instance.move(ePoint(self.yx, 145))
-		self['Box_3'].instance.move(ePoint(self.yx, 200))
-		if self.yx < self.y22:#if self.yx < 519:#if self.yx < self.y22:
-			self.AnimTimer.start(1000//50, True)
-		else:
-			self.AnimTimer.stop()
+		if self.Msg_[0]:
+		    self.yx += self.dyx
+		    index = self['menu'].getSelectionIndex()
+		    _H = self.NewListJS.items()[index][1]
+		    a = 'Title        :  \c0000????'+str(_H[0])
+		    b = 'Rating     :  \c0000????'+str(_H[4])
+		    c = 'Quality    :  \c0000????'+str(_H[5])
+		    d = 'Descpt    :  \c0000????'+str(_H[6])
+		    self['rating'].setText(_H[4])
+		    Msg = [a,b,c,d]
+		    for tx in range(4):
+		        v = Msg[tx]
+		        v = v.replace('[','').replace(']','').replace('N/A','...')
+		        self['Box_'+str(tx)].setText(str(v))
+		    self['Box_0'].instance.move(ePoint(self.yx+500, 5))
+		    self['Box_1'].instance.move(ePoint(self.yx+500, 55))
+		    self['Box_2'].instance.move(ePoint(self.yx+500, 110))
+		    self['Box_3'].instance.move(ePoint(self.yx+500, 165))
+		    self['Infos'].setText(str(_H[0]))
+		    self['Infos'].instance.move(ePoint(self.yx, 835))
+		    self.AnimTimer.start(1000//50, True)
+		    self['Infos_indx'].setText(str(_H[0]))
+		    p = self['Box_0'].instance.position()
+		    #Write_Donnees(str(_H[0])+'---'+str(_H[4])+'---p.x()='+str(p.x())+'***p.y()='+str(p.y())+'\n')
+		    if self.yx < self.y22:
+		        self.AnimTimer.start(1000//50, True)
+		    else:
+		        self.AnimTimer.stop()
+		# self.session.open(MessageBox, _('999999999999999999999'), MessageBox.TYPE_ERROR)
+		# index = self['menu'].getSelectionIndex()
+		# _H = self.NewListJS.items()[index][1]
+		# # a = colorize('Title    :  ['+str(_H[0])+']',selcolor='cyan')
+		# # b = colorize('Rating    :  ['+str(_H[4])+']',selcolor='cyan')
+		# # c = colorize('Quality    :  ['+str(_H[5])+']',selcolor='cyan')
+		# # d = colorize('Descpt    :  '+str(_H[6]),selcolor='cyan')
+		# a = 'Title    :  \c0000????'+str(_H[0])+']'
+		# b = 'Rating    :  \c0000????'+str(_H[4])+']'
+		# c = 'Quality    :  \c0000????'+str(_H[5])+']'
+		# d = 'Descpt    :  \c0000????'+str(_H[6])
+		# self.session.open(MessageBox, _(str(_H[0])+'\n'+str(_H[4])+'\n'+str(_H[5])+'\n'+str(_H[6])), MessageBox.TYPE_ERROR)
+		# Msg = [a,b,c,d]
+		# for tx in range(4):
+		    # v = Msg[tx]
+		    # v = v.replace('[','').replace(']','').replace('N/A','...')
+		    # self['Box_'+str(tx)].setText(v)
+		# self.yx += self.dyx
+		# self['Infos'].setText(str(_H[0]))
+		# self['Infos'].instance.move(ePoint(self.yx, 835))
+		# self['Box_0'].instance.move(ePoint(self.yx+500, 5))
+		# self['Box_1'].instance.move(ePoint(self.yx+500, 55))
+		# self['Box_2'].instance.move(ePoint(self.yx+500, 110))
+		# self['Box_3'].instance.move(ePoint(self.yx+500, 165))
+		# if self.yx < self.y22:#if self.yx < 519:#if self.yx < self.y22:
+			# self.AnimTimer.start(1000//50, True)
+		# else:
+			# self.AnimTimer.stop()
 	##############################
 	def getposi_image(self):
 		self.Positions = [(5,37),(5,792),(218,792),(431,792),(644,792),(857,792),(1070,792),(1283,792),(1496,792),(1709,792)]
 		self.sizeimag = [(185,278)]
 	##############################
 	def decodeImage(self):
-		self.AnimTimer.stop()
-		self.decodeImage_6(0)
+		#self.AnimTimer.stop()
+		if self.Msg_[0]:self.decodeImage_6(0)
 	##############################
 	def decodeImage_50(self,b):
 		self['poster_'+str(b)].instance.resize(eSize(500, 750))#######185,278
@@ -488,7 +557,7 @@ class LinuxsatTestMoveImage(Screen):
 		            self.reference.setName(name)
 		            self.session.open(MoviePlayer,self.reference)
 		        else:self.session.open(MessageBox, _('Not Data Film'), MessageBox.TYPE_ERROR)
-	def Import_My_Infos(self):
+	def Import_My_Infos22222(self):
 		index = self['menu'].getSelectionIndex()
 		_H = self.NewListJS.items()[index][1][1]
 		_Info = get_Info_Film(_H)
@@ -499,9 +568,41 @@ class LinuxsatTestMoveImage(Screen):
 		except:self.watc = 'nada'
 		self.session.open(MessageBox, _('watchBTn = '+str(self.watc)+'\n'+str(_H)+'\n'+str(_Info)), MessageBox.TYPE_ERROR)
 	##############################
+	def Import_My_Infos(self):
+		index = self['menu'].getSelectionIndex()
+		_H = self.NewListJS.items()[index][1][1]
+		self._Info = get_Info_Film(_H)
+		# for keys in self._Info:
+		    # self.session.open(MessageBox, _('keys= '+str(keys)+'\n'+str(self._Info[keys])), MessageBox.TYPE_ERROR)
+		# return
+		
+		self.watc = ''
+		i= 4
+		List_Secour = ['الاسم الاصلي'.encode('utf-8'),'البلد المنشئ'.encode('utf-8'),'المدة'.encode('utf-8'),'تاريخ العرض'.encode('utf-8'),'اللغة'.encode('utf-8')]
+		if len(self._Info)!=0:
+		    try:
+		        _Z = ''
+		        for keys in self._Info:
+		            a = self._Info[keys]
+		            if type(a)==list:
+		                #self.session.open(MessageBox, _('YES '+'\n'+str(a)), MessageBox.TYPE_ERROR)
+		                for q in a:
+		                    _Z += q+' '
+		                a = _Z
+		            if keys=='Watchability':a = 'قابلية المشاهدة'.encode('utf-8')
+		            if keys=='About The Movie':a = cyan+str(a)
+		            else:a = str(keys)+'    :  '+cyan+str(a)
+		            self['Box_'+str(i)].setText(a)
+		            i = i +1
+		            if i>9:break
+		    except:
+		        for tx in range(4,9):
+		            v = '  .......'+List_Secour[tx-4]
+		            self['Box_'+str(tx)].setText(v)
 	def ok(self):
 		self.AnimTimer.stop()
 		self.Import_My_Infos()
 	##############################
 	def exit(self, ret=None):
+		self.AnimTimer.stop()
 		self.close(True)
