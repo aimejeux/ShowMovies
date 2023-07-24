@@ -1,36 +1,44 @@
 <screen name="LinuxsatTestMoveImage" position="2,3" size="1920,1080" flags="wfNoBorder" title="Launcher" backgroundColor="#22000000">
-    <widget name="menu" zPosition="4" foregroundColorSelected="white" position="1225,5" size="700,500" enableWrapAround="1" scrollbarMode="showNever" transparent="1" />
+    <widget name="menu" zPosition="4" foregroundColorSelected="white" position="1960,772" size="700,400" enableWrapAround="1" scrollbarMode="showNever" transparent="1" />
 	<!-- List Poster -->
-    <widget name="poster_0" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/DreamSat/Images/i_0.jpg" position="5,5" size="500,750" zPosition="4" transparent="1" />
+    <widget name="poster_0" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/DreamSat/Images/i_0.jpg" position="5,5" size="500,750" zPosition="6" transparent="0" />
     <widget name="poster_1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/DreamSat/Images/i_1.jpg" position="5,792" size="185,278" zPosition="4" transparent="1" />
     <widget name="poster_2" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/DreamSat/Images/i_2.jpg" position="218,792" size="185,278" zPosition="4" transparent="1" />
     <widget name="poster_3" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/DreamSat/Images/i_3.jpg" position="431,792" size="185,278" zPosition="4" transparent="1" />
     <widget name="poster_4" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/DreamSat/Images/i_3.jpg" position="644,792" size="185,278" zPosition="4" transparent="1" />
     <widget name="poster_5" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/DreamSat/Images/i_3.jpg" position="857,792" size="185,278" zPosition="4" transparent="1" />
     <widget name="poster_6" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/DreamSat/Images/i_3.jpg" position="1070,792" size="185,278" zPosition="4" transparent="1" />
-    <widget name="poster_7" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/DreamSat/Images/i_3.jpg" position="1283,792" size="185,278" zPosition="4" transparent="1" />
+    <widget name="poster_7" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/DreamSat/Images/i_3.jpg" position="1283,792" size="185,278" zPosition="3" transparent="1" />
     <widget name="poster_8" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/DreamSat/Images/i_3.jpg" position="1496,792" size="185,278" zPosition="4" transparent="1" />
     <widget name="poster_9" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/DreamSat/Images/i_3.jpg" position="1709,792" size="185,278" zPosition="4" transparent="1" />
 	<!-- List Infos -->
-    <widget name="Infos" position="519,374" size="1390,140" zPosition="4" font="Regular;33" foregroundColor="#2ECCFA" backgroundColor="#80000000" transparent="1" halign="center" valign="center" />
+    <widget name="Infos" position="549,1069" size="1390,140" zPosition="4" font="Regular;33" foregroundColor="#2ECCFA" backgroundColor="#80000000" transparent="1" halign="center" valign="center" />
 	<widget name="Infos_indx" position="1292,650" size="500,70" zPosition="4" font="Regular;33" foregroundColor="#2ECCFA" backgroundColor="#80000000" transparent="1" halign="center" valign="center" />
     <widget name="Title_Film" position="1267,726" size="700,50" zPosition="4" font="Regular;33" foregroundColor="#2ECCFA" backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
-    <widget name="Box_0" position="519,35" size="700,50" zPosition="4" font="Regular;33" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="left" valign="bottom" />
-    <widget name="Box_1" position="519,90" size="700,50" zPosition="4" font="Regular;33" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="left" valign="bottom" />
-    <widget name="Box_2" position="519,145" size="700,50" zPosition="4" font="Regular;33" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="left" valign="bottom" />
-    <widget name="Box_3" position="519,200" size="700,50" zPosition="4" font="Regular;33" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="left" valign="bottom" />
+    <widget name="Box_0" position="1319,35" size="1200,50" zPosition="3" font="Regular;33" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="left" valign="bottom" />
+    <widget name="Box_1" position="1319,90" size="700,50" zPosition="3" font="Regular;33" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="left" valign="bottom" />
+    <widget name="Box_2" position="1319,145" size="700,50" zPosition="3" font="Regular;33" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="left" valign="bottom" />
+    <widget name="Box_3" position="1319,200" size="700,50" zPosition="3" font="Regular;33" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="left" valign="bottom" />
+    <widget name="Box_4" position="519,5" size="700,50" zPosition="4" font="Regular;30" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="left" valign="bottom" />
+    <widget name="Box_5" position="519,55" size="700,50" zPosition="4" font="Regular;30" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="left" valign="bottom" />
+    <widget name="Box_6" position="519,105" size="700,250" zPosition="4" font="Regular;30" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="left" valign="bottom" />
+    <widget name="Box_7" position="519,415" size="1390,300" zPosition="4" font="Regular;28" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="left" valign="right" />
+    <widget name="Box_8" position="519,355" size="700,50" zPosition="4" font="Regular;30" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="left" valign="bottom" />
     <!-- ClockToText -->
 	<widget backgroundColor="CursorForeground" font="Regular;40" foregroundColor="#2ECCFA" position="1423,22" render="Label" size="500,50" source="global.CurrentTime" transparent="1" valign="center" halign="center" zPosition="4">
     <convert type="ClockToText">Format:%H:%M %p </convert>
     </widget>
 	<!-- List Title Films -->
-    <widget name="Title_1" position="5,740" size="185,50" zPosition="4" font="Regular;20" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
-    <widget name="Title_2" position="218,740" size="185,50" zPosition="4" font="Regular;20" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
-    <widget name="Title_3" position="431,740" size="185,50" zPosition="4" font="Regular;20" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
-    <widget name="Title_4" position="644,740" size="185,50" zPosition="4" font="Regular;20" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
-    <widget name="Title_5" position="857,740" size="185,50" zPosition="4" font="Regular;20" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
-    <widget name="Title_6" position="1070,740" size="185,50" zPosition="4" font="Regular;20" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
-	<widget name="Title_7" position="1283,740" size="185,50" zPosition="4" font="Regular;20" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
-    <widget name="Title_8" position="1496,740" size="185,50" zPosition="4" font="Regular;20" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
-    <widget name="Title_9" position="1709,740" size="185,50" zPosition="4" font="Regular;20" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
+    <widget name="Title_1" position="5,740" size="185,90" zPosition="4" font="Regular;21" foregroundColor="#fdfefe" backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
+    <widget name="Title_2" position="218,740" size="185,90" zPosition="4" font="Regular;21" foregroundColor="#fdfefe " backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
+    <widget name="Title_3" position="431,740" size="185,90" zPosition="4" font="Regular;21" foregroundColor="#fdfefe " backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
+    <widget name="Title_4" position="644,740" size="185,90" zPosition="4" font="Regular;21" foregroundColor="#fdfefe " backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
+    <widget name="Title_5" position="857,740" size="185,90" zPosition="4" font="Regular;21" foregroundColor="#fdfefe " backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
+    <widget name="Title_6" position="1070,740" size="185,90" zPosition="4" font="Regular;21" foregroundColor="#fdfefe " backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
+	<widget name="Title_7" position="1283,740" size="185,120" zPosition="4" font="Regular;21" foregroundColor="#fdfefe " backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
+    <widget name="Title_8" position="1496,740" size="185,90" zPosition="4" font="Regular;21" foregroundColor="#fdfefe " backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
+    <widget name="Title_9" position="1709,740" size="185,90" zPosition="4" font="Regular;21" foregroundColor="#fdfefe " backgroundColor="#80000000" transparent="1" halign="center" valign="top" />
+    <!-- Rating -->
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Cimalek/Images/stars/star_b.png" position="147,695" size="220,20" alphatest="blend" zPosition="2" transparent="1" />
+	<widget source="rating" render="SupTVoDNeWStalker" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Cimalek/Images/stars/star.png" position="147,695" size="220,20" alphatest="blend" transparent="1" zPosition="3" />
 </screen>
