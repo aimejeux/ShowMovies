@@ -2,15 +2,18 @@ from Plugins.Plugin import PluginDescriptor
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Components.Pixmap import Pixmap
-from Plugins.Extensions.ShowMovies.TestMove import LinuxsatTestMoveImage,isHD
+from Plugins.Extensions.ShowMovies.Cimalek.OutilsCimalek.AllImport import *
+from Plugins.Extensions.ShowMovies.TestMove import MenuShowMovies
+from Plugins.Extensions.ShowMovies.Cimalek.Home.Home import HomeShowMovies
 #########################################
-Ver = 1.0
+Ver = getversioninfo()#1.0
 #########################################
 def main(session, **kwargs):
     if isHD():
         session.open(MessageBox, _('Skin is not supported\nShowMovies works only with FHD skins'), MessageBox.TYPE_ERROR)
     else:
-        session.open(LinuxsatTestMoveImage)
+        session.open(HomeShowMovies)
+        #session.open(MenuShowMovies)
 #########################################
 def showmenu(menuid, **kwargs):
     if menuid == "mainmenu":
