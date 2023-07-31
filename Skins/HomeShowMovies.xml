@@ -1,0 +1,8 @@
+<screen name="HomeShowMovies" position="0,0" size="1920,1080" flags="wfNoBorder" title="Launcher" backgroundColor="transparent">
+    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/Home.png" position="546,299" size="828,481" alphatest="blend" zPosition="4" transparent="1" />
+    <widget name="Selct_0" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/home_0.png" position="899,309" size="140,87" zPosition="5" transparent="1" alphatest="on" />
+    <widget name="Selct_1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/home_1.png" position="1045,408" size="88,86" zPosition="5" transparent="1" alphatest="on" />
+    <widget name="Selct_2" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/home_2.png" position="796,410" size="100,86" zPosition="5" transparent="1" alphatest="on" />
+    <widget name="Selct_3" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/home_3.png" position="908,514" size="123,76" zPosition="5" transparent="1" alphatest="on" />
+    <widget name="Selct_4" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/home_4.png" position="921,600" size="97,81" zPosition="5" transparent="1" alphatest="on" />
+</screen>
