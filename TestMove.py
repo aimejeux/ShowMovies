@@ -1,168 +1,39 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/python
 from Screens.Screen import Screen
-from Components.MenuList import MenuList
 from Components.Label import Label
 from Components.ActionMap import ActionMap
 from Screens.MessageBox import MessageBox
 from Components.Pixmap import Pixmap
 from enigma import ePixmap, eTimer, ePoint, gPixmapPtr
-from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS
+from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 from Components.Sources.StaticText import StaticText
 import json
 import os
 from sys import version_info
 ##################################################################ADJ
-from Tools.Directories import fileExists, pathExists
 ##################################################################
 from Components.AVSwitch import AVSwitch
-from Tools.BoundFunction import boundFunction
 from enigma import ePoint, eSize, eTimer,ePicLoad
-from enigma import getDesktop, eListboxPythonMultiContent, eListbox, gFont, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_WRAP, loadPNG
-from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmap, MultiContentEntryPixmapAlphaTest, MultiContentEntryPixmapAlphaBlend
+from enigma import getDesktop
 ################################################ yasser
 black,white,gray='\c00000000','\c00??????','\c00808080'
 blue,green,red,yellow,cyan,magenta,ivory='\c000000??','\c0000??00','\c00??0000','\c00????00','\c0000????','\c00??00??','\c0???????'
 ################################################ yasser
 PY3 = version_info[0] == 3
 ##################################################################My Imort
-from Plugins.Extensions.ShowMovies.Cimalek.OutilsCimalek.MyImportCimalek import get_My_Donnees,Read_Js,ClearProf,get_D1,get_Info_Film
-def getDesktopSize():
-	s = getDesktop(0).size()
-	return (s.width(), s.height())
+from Plugins.Extensions.ShowMovies.Cimalek.OutilsCimalek.MyImportCimalek import get_My_Donnees,Read_Js,ClearProf,get_D1,get_Info_Film,get_Taille
+from Plugins.Extensions.ShowMovies.Cimalek.OutilsCimalek.AllImport import *
+from Plugins.Extensions.ShowMovies.Cimalek.Home.Watchability import HomeShowMoviesSelect
 #########################################
-def isHD():
-	desktopSize = getDesktopSize()
-	if desktopSize[0] < 1920:
-		return True
-	else:
-		return False
+from enigma import eServiceReference
 #########################################
-def isDreamOS():
-	if fileExists('/var/lib/dpkg/status'):
-		return True
-	else:
-		return False
-#########################################
-if os.path.exists('/var/lib/dpkg/status'):
-    enigmaos = 'oe2.2'
-else:
-    enigmaos = 'oe2.0'
-#########################################
-def is_ascii(s):
-    try:
-        s.decode('ascii')
-    except UnicodeDecodeError:
-        return False
-    else:
-        return True
-#########################################
-from enigma import iPlayableService, iServiceInformation, eServiceCenter, eServiceReference, iFrontendInformation, eTimer , gRGB , eConsoleAppContainer
-from ServiceReference import ServiceReference
-from Components.ServiceEventTracker import ServiceEventTracker
-def Write_Donnees(txt):
-    Path = '/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/dimimage.txt'
-    outfile = open(Path, 'a')
-    outfile.write(txt)
-    outfile.close()
-    #print 'Cool'
-def colorize(txt,selcolor='white',marker1="[",marker2="]"):
-    txt = txt.replace(',','')
-    #txt = txt.replace('.','')
-    if enigmaos == "oe2.2" or  is_ascii(txt)==False:
-        return txt
-    #else:txt = txt.encode('utf-8')
-    colors={'black':'\c00000000','white':'\c00??????','grey':'\c00808080',
-    'blue':'\c000000??','green':'\c0000??00','red':'\c00??0000','ivory':"\c0???????",
-    'yellow':'\c00????00','cyan':'\\c0000????','magenta':'\c00??00??'}
-    color=colors.get(selcolor,'\c0000????')
-    color1=colors.get('cyan','\c0000????')
-    try:
-        if not marker1 in txt :
-            txt = txt.split()
-            tx = ''
-            for tx in txt:
-                tx+=color+" "+tx
-            Write_Donnees('\n0-----------------'+tx+'\n'+str(type(tx))+'\n')
-            return tx#color+" "+str(txt[0])+color+" "+str(txt[1])+color+" "+str(txt[2])
-        txtparts=txt.split(marker1)
-        txt1=txtparts[0]
-        txt2=txtparts[1]
-        try:
-            txt2 = txt2.decode('utf-8')
-        except:txt2=txt2
-        Write_Donnees('\n1-----------------'+txt1+'\n'+txt2+'\n')
-        if marker2 in txt2:
-            Write_Donnees('\n2-----------------'+txt2+'++++++++++++'+str(type(txt2))+'\n')
-            txtos = ''
-            txt2 = txt2.replace(']','')
-            txt3=txt2.split()
-            for txto in txt3:
-                try:
-                    txto = txto.decode('utf-8')
-                    txtos+=" "+color+txto
-                except:txtos+=" "+color+txto
-            Write_Donnees('\n3-----------------'+txto+'++++++++++++'+str(type(txto))+'\n')
-            return txt1+txtos
-			
-        # if marker2 in txt:
-            # txt3=txt2.split(marker2)#[0]
-            # if len(txt3)>=2:
-                # if txt3[1]!='':
-                    # txt3,txt4 = txt3[0],txt3[1]
-                    # ftxt=txt1+" "+color+marker1+txt3+marker2+color1+txt4
-                # else:
-                    # txt3= txt3[0]
-                    # ftxt=txt1+" "+color+marker1+txt3+marker2
-        # else:
-            # txt3=txt2
-            # ftxt=txt1+" "+color+marker1+txt3+marker2
-        # return ftxt
-    except:
-        Write_Donnees(txt+'--------------------------probleme '+str(type(txt))+'\n')
-        return txt
-#########################################
-def getversioninfo():
-	currversion = '1.0'
-	version_file = resolveFilename(SCOPE_PLUGINS, 'Extensions/ShowMovies/Version')
-	if os.path.exists(version_file):
-		try:
-			fp = open(version_file, 'r').readlines()
-			for line in fp:
-				if 'version' in line:
-					currversion = line.split('=')[1].strip()
-		except:
-			pass
-	return (currversion)
-Ver = getversioninfo()
-#########################################
-class m2list(MenuList):
-    def __init__(self, list):
-        MenuList.__init__(self, list, False, eListboxPythonMultiContent)
-        self.l.setFont(0, gFont('Regular', 10))
-        self.l.setFont(1, gFont('Regular', 16))
-        self.l.setFont(2, gFont('Regular', 18))
-        self.l.setFont(3, gFont('Regular', 20))
-        self.l.setFont(4, gFont('Regular', 22))
-        self.l.setFont(5, gFont('Regular', 24))
-        self.l.setFont(6, gFont('Regular', 26))
-        self.l.setFont(7, gFont('Regular', 28))
-        self.l.setFont(8, gFont('Regular', 30))
-#########################################
-def show_VPN(Prblm):
-    res = [Prblm]
-    res.append(MultiContentEntryText(pos=(2, 2), size=(668, 35), font=4, text=Prblm, color=16777215, color_sel=13870629, flags=RT_HALIGN_LEFT))
-    #res.append(MultiContentEntryText(pos=(670, 2), size=(668, 35), font=4, text=List_Y, flags=RT_HALIGN_LEFT))
-    return res
-#########################################
-PLUGIN_PATH = '/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/i_'
-PLUGIN_PATH_SKIN = '/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Skins'
 #########################################
 dwidth = getDesktop(0).size().width()
 #########################################
 ############start of list
 ###############end of list
-class LinuxsatTestMoveImage(Screen):
+class MenuShowMovies(Screen):
 	def __init__(self, session, *args):
 		if dwidth == 1280:
 		    with open(PLUGIN_PATH_SKIN + '/MainTestAnimFHD.xml', 'r') as f:
@@ -173,6 +44,18 @@ class LinuxsatTestMoveImage(Screen):
 		        self.skin = f.read()
 		        f.close()
 		self.session = session
+		Screen.__init__(self, session)
+		self['actions'] = ActionMap(['DirectionActions','SetupActions','ColorActions'], {'cancel': self.exit,#self['actions'] = ActionMap(['ShowMoviesPanelActions'], {'cancel': self.exit,
+			'left': self.left,
+			'right': self.right,
+			"down": self.keyDown,
+			"up": self.keyUp,
+			'ok': self.ok,
+			#'green': self.affich_DEbut,
+			'green': self.Import_My_Watch_Url,
+			'blue': self.Import_second_Page,
+			'yellow': self.Clear_Folder_Img,
+		}, -1)
 		y1, y2 = (1080, 535)
 		self.y1 = y1
 		self.y2 = y2
@@ -185,88 +68,126 @@ class LinuxsatTestMoveImage(Screen):
 		self.yx = y11
 		self.dyx = (y22 - y11) // 30
 		##############################Pixmap
-		self['poster_0'] = Pixmap()
-		self['poster_1'] = Pixmap()
-		self['poster_2'] = Pixmap()
-		self['poster_3'] = Pixmap()
+		self['Img_star'] = Pixmap()
 		##############################Label
 		self['rating'] =StaticText()
 		self['Title_Film'] = Label()
 		self['Infos'] = Label()
-		self['Infos'].setText('Test Move Text')
+		self['Infos'].setText('wait ......... data download')
+		#self['Infos'].hide()
 		self['Infos_indx'] = Label()
 		self['Infos_indx'].setText('')
 		self.FoldImag = '/media/hdd/Cimalek/Images/'
 		self.watchBTn = False
-		##############################NewList
-		self.List_Film =['ينطلق دانتي – ابن زعيم الجريمة (هيرنان رييس) – الذي قُتل قبل عشر سنوات للانتقام من البطل دوم توريتو وعائلته وشركائه بعد التسبب في مقتل والده وسرقة أمواله.','تخرج قاتلة محترفة تلقت تدريبًا عسكريًّا من مخبئها لحماية ابنتها التي لم تقابلها قط من فتك مجرمَين عديمَي الرحمة يسعيان للانتقام.','يجد وكيل العمليات الخاصة الفولاذية أن أخلاقه تخضع للاختبار عندما يتسلل إلى نقابة إجرامية ويربط بشكل غير متوقع مع ابن رئيسه الصغير.','يُسافر سباك يُدعى ماريو عبر متاهة تحت الأرض رفقة شقيقه لويجي، وسرعان ما يخوض الثنائي العديد من المغامرات معًا على أمل إنقاذ أميرة.']
-		self.NewList = ['i_0.jpg','i_1.jpg','i_2.jpg','i_3.jpg']
-		self.NewListTitle = ['Fast X','The Mother','AKA','The Super Mario Bros. Movie']
+		##############################
 		for x in range(10):
 			self['poster_'+str(x)] = Pixmap()
 			self['poster_'+str(x)].show()
-			#self.Dist = PLUGIN_PATH+str(x)+'.png'
 		for x in range(9):
 		    self['Box_'+str(x)] = Label()
 		for x in range(1,10):
 		    self['Title_'+str(x)] = Label()
 		self.NewListJS = {}
 		##############################Timer
-		self.Timer_ = eTimer()
+		self.moniTimer = eTimer()
+		self.timeaffich = eTimer()
+		#self.moniTimer.callback.append(self.updatePoster)
+		#self.moniTimer.timeout.get().append(self.affich_Menu)
 		self.Timer = eTimer()
-		self.AnimTimer = eTimer()
-		self.timer = eTimer()
 		self.Timer.callback.append(self.updatePoster)
+		self.AnimTimer = eTimer()
 		self.AnimTimer.callback.append(self.newupdateLabel)
+		#self.onLayoutFinish.append(self.layoutFinish)
 		##############################
-		self['actions'] = ActionMap(['ShowMoviesPanelActions'], {'cancel': self.exit,
-			'left': self.left,
-			'right': self.right,
-			"down": self.keyDown,
-			"up": self.keyUp,
-			'ok': self.ok,
-			'green': self.Import_My_Watch_Url,
-		}, -1)
-		Screen.__init__(self, session)
+		self.Page = 1
 		self.picload = ePicLoad()
 		self.menu = []
 		self['menu'] = m2list([])
-		#self.picload = ePicLoad()
+		# self.menuWatch = []
+		# self['menu_Watch'] = []
+		#self['menu_Watch'].hide()
 		##############################Start
+		#self.onShown.append(self.affich_Infos_cond)
+		self.affich_DEbut()
+		self.Pox = 400
+		self.Poy = 350
+		self.Condit = 1
+	def affich_DEbut(self):
+		self.onLayoutFinish.append(self.layoutFinish)
 		self.getposi_image()
 		self.ImportImages()
 		self.onLayoutFinish.append(self.decodeImage)
-		self.onLayoutFinish.append(self.layoutFinish)
-		self.onLayoutFinish.append(self.newlayoutFinish)
+		
+		#self.onLayoutFinish.append(self.newlayoutFinish)
+		self.onLayoutFinish.append(self.showDescAnim)
 		self.onLayoutFinish.append(self.setText_Films)
+		self.onLayoutFinish.append(self.TestRating)
+		#self.onLayoutFinish.append(self.ConvertDeco)
+	def ConvertDeco(self):
+		self.x = self.Pox
+		self.y = self.Poy
+		self.w = 500
+		self.h = 0
+		self.moniTimer.start(200)
+	def TestRating(self):
+		if self.Msg_[0]:
+		    try:
+		        index = self['menu'].getSelectionIndex()
+		        _H = self.NewListJS.items()[index][1]
+		        a = _H[4]
+		        x = 50*float(a)
+		        b = "%.0f" % x
+		        self['Img_star'].instance.resize(eSize(int(b), 50))
+		    except:self['Img_star'].instance.resize(eSize(0, 0))
+		else:self['Img_star'].instance.resize(eSize(0, 0))
+		# self.Timer.stop()
+		# self.AnimTimer.stop()
+		# self.ConvertDeco()
+	def affich_Menu(self):
+		#self.moniTimer.stop()
+		self['menu'].instance.resize(eSize(int(self.w), int(self.h)))
+		if self.h < self.Poy:
+		    self.h += self.Poy //60
+		    self.moniTimer.start(50)
+		else:
+		    self.moniTimer.stop()
 	def ImportImages(self):
+		self.timeaffich.stop()
 		self.menu = []
 		uri = '''https://w.cimalek.to/category/aflam-online/'''
-		uri1= '''https://w.cimalek.to/category/aflam-online/page/2/'''
-		#Msg_ = get_data_Fajre(uri,3)
-		self.Msg_ = get_My_Donnees(uri)
-		#self.session.open(MessageBox, _(str(self.Msg_[1])+'\n'+str(self.Msg_[0])), MessageBox.TYPE_ERROR)
+		uri1= '''https://w.cimalek.to/category/aflam-online/page/%s/''' % (str(self.Page))
+		uri2= '''https://w.cimalek.to/recent/'''
+		uri3= '''https://w.cimalek.to/category/aflam-online/page/255/'''
+		uri4='''https://w.cimalek.to/recent/page/1325/'''
+		self.Msg_ = get_My_Donnees(uri1)
 		if self.Msg_[0]:
 		    self.NewListJS = Read_Js()
 		    for _dons in self.NewListJS:
 		        Prblm = self.NewListJS[_dons][0]#ClearProf(_dons)
-		        #List_Y = self.NewListJS[_dons]
-		        self.menu.append(show_VPN(str(Prblm)))
+		        self.menu.append(show_Movies(str(Prblm)))
 		    self.pagination = self.Msg_[2]
+		    p_1 =self.pagination[0]
+		    p_2 =self.pagination[1]
+		    _B = 'الصفحة'.encode('utf-8')+'  '+str(p_1)+' / '+str(p_2)
+		    self['Infos_indx'].setText(_B)
+		    if self.Page < int(p_2):self.Page = int(p_1) + 1
+		    else:self.Page=1
+		    TxC = 'p_1 = '+str(p_1)+'\n'+'p_2 = '+str(p_2)+'\nPage = '+str(self.Page)+'\n'+str(uri1)+'\n====================\n'
+		    Write_Donnees(TxC)
 		else:
-		    self.menu.append(show_VPN('Not Data'))
+		    self.menu.append(show_Movies('Not Data'))
 		self['menu'].l.setList(self.menu)
 		self['menu'].l.setItemHeight(35)
-		#self.session.open(MessageBox, _(str(_dons)), MessageBox.TYPE_ERROR)
+		self['menu'].moveToIndex(0)
 		##############################List_Film
 	def newlayoutFinish(self):#
 		if self.Msg_[0]:
 		    index = self['menu'].getSelectionIndex()
 		    _H = self.NewListJS.items()[index][1]
-		    a = 'Title        :  \c0000????'+str(_H[0])
-		    b = 'Rating     :  \c0000????'+str(_H[4])
-		    c = 'Quality    :  \c0000????'+str(_H[5])
-		    d = 'Descpt    :  \c0000????'+str(_H[6])
+		    a = 'Title        :  \c0000????'+str(_H[0]).replace('nada','........')
+		    b = 'Rating     :  \c0000????'+str(_H[4]).replace('nada','........')
+		    c = 'Quality    :  \c0000????'+str(_H[5]).replace('nada','........')
+		    d = 'Descpt    :  \c0000????'+str(_H[6]).replace('nada','........')#.replace('\n','\n\t')
 		    Msg = [a,b,c,d]
 		    self['rating'].setText(_H[4])
 		    for tx in range(4):
@@ -277,19 +198,22 @@ class LinuxsatTestMoveImage(Screen):
 		    self['Box_1'].instance.move(ePoint(self.yx, 90))
 		    self['Box_2'].instance.move(ePoint(self.yx, 145))
 		    self['Box_3'].instance.move(ePoint(self.yx, 200))
-		    self['Infos'].setText(str(_H[0]))
-		    self['Infos'].instance.move(ePoint(self.yx, 835))
-		    self.AnimTimer.start(1000//50, True)
-		    self['Infos_indx'].setText(str(_H[0]))
+		    #self['Infos'].setText(str(_H[0]))
+		    #self['Infos'].instance.move(ePoint(self.yx, 835))
+		    Z = self.Msg_[2]
+		    self.AnimTimer.start(100//10, True)
+		    self['Infos_indx'].setText(str(Z[0])+' / '+str(Z[1]))
 		##############################
 	def layoutFinish(self):
 		if self.Msg_[0]:
 		    for x in range(10):
 		        self['poster_'+str(x)].instance.move(ePoint(0, 1080))
-		    self.Timer.start(1000//60, True)
+		    self.Timer.start(100//10, True)
 		##############################
 	def updatePoster(self):
-		self.y -= self.dy
+		p = self['poster_0'].instance.position()
+		#self.y -= 2703
+		self.y -= self.dy+10
 		self['poster_0'].instance.move(ePoint(5, self.y-800))
 		self['poster_1'].instance.move(ePoint(5, self.y))
 		self['poster_2'].instance.move(ePoint(218, self.y))
@@ -300,73 +224,67 @@ class LinuxsatTestMoveImage(Screen):
 		self['poster_7'].instance.move(ePoint(1283, self.y))
 		self['poster_8'].instance.move(ePoint(1496, self.y))
 		self['poster_9'].instance.move(ePoint(1709, self.y))
-		#Write_Donnees(str(self.y)+"--------")
-		if self.y > 792:#if self.y > self.y2:
-			self.Timer.start(1000//60, True)
+		if self.y > 792:#if self.y > self.y2:##
+			self.Timer.start(100//10, True)
 		else:
 			self.Timer.stop()
-			#p = self['poster_0'].instance.position()
-			#self.session.open(MessageBox, _(str(p.x())+'     '+str(p.y())), MessageBox.TYPE_ERROR)
+			#self.session.open(MessageBox, _(), MessageBox.TYPE_INFO)
 	##############################
 	def newupdateLabel(self):
-		self.yx += self.dyx
-		self['Infos'].instance.move(ePoint(self.yx, 835))
+		self.yx += +100#self.dyx
+		#self['Infos'].instance.move(ePoint(self.yx, 835))
 		#self['Title_Film'].instance.move(ePoint(self.yx, 35))
 		self['Box_0'].instance.move(ePoint(self.yx+500, 5))
 		self['Box_1'].instance.move(ePoint(self.yx+500, 55))
 		self['Box_2'].instance.move(ePoint(self.yx+500, 110))
 		self['Box_3'].instance.move(ePoint(self.yx+500, 165))
 		if self.yx < self.y22:
-			self.AnimTimer.start(1000//50, True)
+			self.AnimTimer.start(100//10, True)
 		else:
 			self.AnimTimer.stop()
 	def newupdateLabel555555(self):
-		self.yx += self.dyx
-		self['Infos'].instance.move(ePoint(self.yx, 835))
+		#self.yx += self.dyx
+		self.yx += 100
+		#self['Infos'].instance.move(ePoint(self.yx, 835))
 		#self['Title_Film'].instance.move(ePoint(self.yx, 35))
 		self['Box_0'].instance.move(ePoint(self.yx, 750))
 		self['Box_1'].instance.move(ePoint(self.yx, 835))
 		self['Box_2'].instance.move(ePoint(self.yx, 885))
 		self['Box_3'].instance.move(ePoint(self.yx, 935))
 		if self.yx < self.y22:
-			self.AnimTimer.start(1000//50, True)
+			self.AnimTimer.start(100//10, True)
 		else:
 			self.AnimTimer.stop()
 	##############################
-	def keyDown(self):
-		self['menu'].down()
-		idx = self['menu'].getSelectionIndex()
-		#self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
+	def Regroupement(self):
 		self.Moveframe()
 		self.decodeImage()
 		self.setText_Films()
+		self.TestRating()
+	def keyDown(self):
+		self['menu'].down()
+		idx = self['menu'].getSelectionIndex()
+		self.Regroupement()
 	##############################
 	def keyUp(self):
 		self['menu'].up()
 		idx = self['menu'].getSelectionIndex()
-		#self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
-		self.Moveframe()
-		self.decodeImage()
-		self.setText_Films()
+		self.Regroupement()
 	##############################
 	def left(self):
 		self['menu'].pageUp()
 		idx = self['menu'].getSelectionIndex()
-		#self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
-		self.Moveframe()
-		self.decodeImage()
-		self.setText_Films()
+		self.Regroupement()
 	##############################
 	def right(self):
 		self['menu'].pageDown()
 		idx = self['menu'].getSelectionIndex()
-		#self['Infos_indx'].setText('Indx Selection = '+str(idx)+'  '+str(len(self.NewListJS)))
-		self.Moveframe()
-		self.decodeImage()
-		self.setText_Films()
+		self.Regroupement()
 	##############################
 	def setText_Films(self):
-		if self.Msg_[0]:self.setText_Films_1()
+		if self.Msg_[0]:
+		    #self['Infos'].setText('wait ......... data download')
+		    self.setText_Films_1()
 	def setText_Films_1(self):
 		index = self['menu'].getSelectionIndex()
 		Y = len(self.NewListJS)-1
@@ -376,41 +294,42 @@ class LinuxsatTestMoveImage(Screen):
 		        V = Nw_List[x-1]
 		        _G = self.NewListJS.items()[V][1]
 		        self['Title_'+str(x)].setText(str(_G[0]))
-		elif index+7 > Y:
+		elif index+10 > Y:
 		    Nw_List = range(index,Y+1)+[0,1,2,3,4,5,6,7,8]
-		    #self.session.open(MessageBox, _(str(Nw_List)+'\nindex ='+str(index)+'\nY ='+str(Y)), MessageBox.TYPE_ERROR)
 		    for x in range(1,10):
 		        V = Nw_List[x]
 		        _G = self.NewListJS.items()[V][1]
 		        self['Title_'+str(x)].setText(str(_G[0]))
 		else:
-		    for x in range(1,10):
-		        _G = self.NewListJS.items()[x+index][1]
-		        self['Title_'+str(x)].setText(str(_G[0]))
+		    try:
+		        for x in range(1,10):
+		            _G = self.NewListJS.items()[x+index][1]
+		            self['Title_'+str(x)].setText(str(_G[0]))
+		    except:
+		        _G = self['menu'].getCurrent()[0]
+		        # self['Title_'+str(8)].setText(str(_G))
+		        self.session.open(MessageBox, _(str(_G)+'\nindex ='+str(index)), MessageBox.TYPE_INFO)
 		p_1 =self.pagination[0]
 		p_2 =self.pagination[1]
 		_B = 'الصفحة'.encode('utf-8')+'  '+str(p_1)+' / '+str(p_2)
-		#self['Infos_indx'].setText(_B)
 	##############################
 	def Moveframe(self):
-		#self.session.open(MessageBox, _(str(self.Msg_[0])), MessageBox.TYPE_ERROR)
-		#if self.Msg_[0]:
-		    self.yx = self.y11
-		    self.dyx = (self.y22 - self.y11) // 40
-		    if self.newupdateLabel in self.AnimTimer.callback:
-		        self.AnimTimer.callback.remove(self.newupdateLabel)
-		        self.AnimTimer.callback.append(self.showDescAnim)
-		    self.AnimTimer.start(1000//50, True)
+		self.yx = self.y11
+		self.dyx = (self.y22 - self.y11) // 40
+		if self.newupdateLabel in self.AnimTimer.callback:
+		    self.AnimTimer.callback.remove(self.newupdateLabel)
+		    self.AnimTimer.callback.append(self.showDescAnim)
+		self.AnimTimer.start(100//10, True)
 	##############################\c0000????
 	def showDescAnim(self):
 		if self.Msg_[0]:
-		    self.yx += self.dyx
+		    self.yx += self.dyx+100
 		    index = self['menu'].getSelectionIndex()
 		    _H = self.NewListJS.items()[index][1]
-		    a = 'Title        :  \c0000????'+str(_H[0])
-		    b = 'Rating     :  \c0000????'+str(_H[4])
-		    c = 'Quality    :  \c0000????'+str(_H[5])
-		    d = 'Descpt    :  \c0000????'+str(_H[6])
+		    a = 'Title        :  \c0000????'+str(_H[0]).replace('nada','........')
+		    b = 'Rating     :  \c0000????'+str(_H[4]).replace('nada','........')
+		    c = 'Quality    :  \c0000????'+str(_H[5]).replace('nada','........')
+		    d = 'Descpt    :  \c0000????'+str(_H[6]).replace('nada','........')#.replace('\n','\n\t')
 		    self['rating'].setText(_H[4])
 		    Msg = [a,b,c,d]
 		    for tx in range(4):
@@ -421,44 +340,16 @@ class LinuxsatTestMoveImage(Screen):
 		    self['Box_1'].instance.move(ePoint(self.yx+500, 55))
 		    self['Box_2'].instance.move(ePoint(self.yx+500, 110))
 		    self['Box_3'].instance.move(ePoint(self.yx+500, 165))
-		    self['Infos'].setText(str(_H[0]))
-		    self['Infos'].instance.move(ePoint(self.yx, 835))
-		    self.AnimTimer.start(1000//50, True)
-		    self['Infos_indx'].setText(str(_H[0]))
-		    p = self['Box_0'].instance.position()
-		    #Write_Donnees(str(_H[0])+'---'+str(_H[4])+'---p.x()='+str(p.x())+'***p.y()='+str(p.y())+'\n')
+		    #self['Infos'].setText(str(_H[0]))
+		    #self['Infos'].instance.move(ePoint(self.yx, 835))
+		    self.AnimTimer.start(100//10, True)
+		    #p = self['Box_0'].instance.position()
 		    if self.yx < self.y22:
-		        self.AnimTimer.start(1000//50, True)
+		        self.AnimTimer.start(100//10, True)
 		    else:
 		        self.AnimTimer.stop()
-		# self.session.open(MessageBox, _('999999999999999999999'), MessageBox.TYPE_ERROR)
-		# index = self['menu'].getSelectionIndex()
-		# _H = self.NewListJS.items()[index][1]
-		# # a = colorize('Title    :  ['+str(_H[0])+']',selcolor='cyan')
-		# # b = colorize('Rating    :  ['+str(_H[4])+']',selcolor='cyan')
-		# # c = colorize('Quality    :  ['+str(_H[5])+']',selcolor='cyan')
-		# # d = colorize('Descpt    :  '+str(_H[6]),selcolor='cyan')
-		# a = 'Title    :  \c0000????'+str(_H[0])+']'
-		# b = 'Rating    :  \c0000????'+str(_H[4])+']'
-		# c = 'Quality    :  \c0000????'+str(_H[5])+']'
-		# d = 'Descpt    :  \c0000????'+str(_H[6])
-		# self.session.open(MessageBox, _(str(_H[0])+'\n'+str(_H[4])+'\n'+str(_H[5])+'\n'+str(_H[6])), MessageBox.TYPE_ERROR)
-		# Msg = [a,b,c,d]
-		# for tx in range(4):
-		    # v = Msg[tx]
-		    # v = v.replace('[','').replace(']','').replace('N/A','...')
-		    # self['Box_'+str(tx)].setText(v)
-		# self.yx += self.dyx
-		# self['Infos'].setText(str(_H[0]))
-		# self['Infos'].instance.move(ePoint(self.yx, 835))
-		# self['Box_0'].instance.move(ePoint(self.yx+500, 5))
-		# self['Box_1'].instance.move(ePoint(self.yx+500, 55))
-		# self['Box_2'].instance.move(ePoint(self.yx+500, 110))
-		# self['Box_3'].instance.move(ePoint(self.yx+500, 165))
-		# if self.yx < self.y22:#if self.yx < 519:#if self.yx < self.y22:
-			# self.AnimTimer.start(1000//50, True)
-		# else:
-			# self.AnimTimer.stop()
+		Taill_Fold = get_Taille()
+		self['Infos'].setText('Image File Size : \c0000????'+str(Taill_Fold))
 	##############################
 	def getposi_image(self):
 		self.Positions = [(5,37),(5,792),(218,792),(431,792),(644,792),(857,792),(1070,792),(1283,792),(1496,792),(1709,792)]
@@ -466,7 +357,9 @@ class LinuxsatTestMoveImage(Screen):
 	##############################
 	def decodeImage(self):
 		#self.AnimTimer.stop()
-		if self.Msg_[0]:self.decodeImage_6(0)
+		if self.Msg_[0]:
+		    #self['Infos'].setText('wait ......... data download')
+		    self.decodeImage_6(0)
 	##############################
 	def decodeImage_50(self,b):
 		self['poster_'+str(b)].instance.resize(eSize(500, 750))#######185,278
@@ -543,66 +436,96 @@ class LinuxsatTestMoveImage(Screen):
 		            del self.picload
 	##############################
 	def Import_My_Watch_Url(self):
+		self.Import_My_Infos()
+		return
+		self.menuWatch =[]
+		self['menu_Watch'] = []
 		from enigma import eServiceReference
 		from Screens.InfoBar import InfoBar, MoviePlayer
 		MyFilms = ['nada']
 		if self.watchBTn:
+		    #self.watc
 		    sft,_Df = get_D1(self.watc)
 		    if sft:
-		        MyFilms = _Df
+		        #MyFilms = _Df
 		        if len(_Df)!=0:
-		            stream_url = _Df[0][1]
-		            name = self['menu'].getCurrent()[0]
-		            self.reference = eServiceReference(5002, 0, stream_url.encode('utf-8'))
-		            self.reference.setName(name)
-		            self.session.open(MoviePlayer,self.reference)
-		        else:self.session.open(MessageBox, _('Not Data Film'), MessageBox.TYPE_ERROR)
-	def Import_My_Infos22222(self):
-		index = self['menu'].getSelectionIndex()
-		_H = self.NewListJS.items()[index][1][1]
-		_Info = get_Info_Film(_H)
-		self.watc = ''
-		try:
-		    self.watc = _Info.get('watchBTn','')
-		    self.watchBTn = True
-		except:self.watc = 'nada'
-		self.session.open(MessageBox, _('watchBTn = '+str(self.watc)+'\n'+str(_H)+'\n'+str(_Info)), MessageBox.TYPE_ERROR)
+		            self.menuWatch = _Df
+		            self['menu_Watch'].l.setList(self.menuWatch)
+		            self['menu_Watch'].l.setItemHeight(35)
+		            for a in self.menuWatch:
+		                self.session.open(MessageBox, _(str(a[0])+'\n'+str(a[1])), MessageBox.TYPE_INFO)
+		            #stream_url = _Df[0][1]
+		            # name = self['menu'].getCurrent()[0]
+		            # self.reference = eServiceReference(5002, 0, stream_url.encode('utf-8'))
+		            # self.reference.setName(name)
+		            # self.session.open(MoviePlayer,self.reference)
+		        else:self.session.open(MessageBox, _('Not Data Film'), MessageBox.TYPE_INFO)
+		    self.watchBTn = False
+	def ShoHid(self):
+		self['Infos'].show()
+	def Import_second_Page(self):
+		#self['Infos'].show()
+		self.moniTimer.stop()
+		self.Timer.stop()
+		self.getposi_image()
+		#self.ShoHid()
+		self.ImportImages()
+		self.decodeImage()
+		self.setText_Films()
+		self.TestRating()
+		self.Moveframe()
+		#self.layoutFinish()
+		#self.Timer.callback.append(self.updatePoster)
+		#self.AnimTimer.callback.append(self.newupdateLabel)
+		#self.affich_DEbut()
+		# self.session.open(MessageBox, _('watchBTn = '+str(self.watc)+'\n'+str(_H)+'\n'+str(_Info)), MessageBox.TYPE_INFO)
 	##############################
 	def Import_My_Infos(self):
-		index = self['menu'].getSelectionIndex()
-		_H = self.NewListJS.items()[index][1][1]
-		self._Info = get_Info_Film(_H)
-		# for keys in self._Info:
-		    # self.session.open(MessageBox, _('keys= '+str(keys)+'\n'+str(self._Info[keys])), MessageBox.TYPE_ERROR)
-		# return
-		
-		self.watc = ''
-		i= 4
-		List_Secour = ['الاسم الاصلي'.encode('utf-8'),'البلد المنشئ'.encode('utf-8'),'المدة'.encode('utf-8'),'تاريخ العرض'.encode('utf-8'),'اللغة'.encode('utf-8')]
-		if len(self._Info)!=0:
-		    try:
-		        _Z = ''
-		        for keys in self._Info:
-		            a = self._Info[keys]
-		            if type(a)==list:
-		                #self.session.open(MessageBox, _('YES '+'\n'+str(a)), MessageBox.TYPE_ERROR)
-		                for q in a:
-		                    _Z += q+' '
-		                a = _Z
-		            if keys=='Watchability':a = 'قابلية المشاهدة'.encode('utf-8')
-		            if keys=='About The Movie':a = cyan+str(a)
-		            else:a = str(keys)+'    :  '+cyan+str(a)
-		            self['Box_'+str(i)].setText(a)
-		            i = i +1
-		            if i>9:break
-		    except:
-		        for tx in range(4,9):
-		            v = '  .......'+List_Secour[tx-4]
-		            self['Box_'+str(tx)].setText(v)
+		if self.Msg_[0]:
+		    index = self['menu'].getSelectionIndex()
+		    _H = self.NewListJS.items()[index][1][1]
+		    self._Info = get_Info_Film(_H)
+		    self.watc = ''
+		    i= 4
+		    List_Secour = ['الاسم الاصلي'.encode('utf-8'),'البلد المنشئ'.encode('utf-8'),'المدة'.encode('utf-8'),'تاريخ العرض'.encode('utf-8'),'اللغة'.encode('utf-8')]
+		    if len(self._Info)!=0:
+		        _Title = self['menu'].getCurrent()[0]
+		        self.session.open(HomeShowMoviesSelect,self._Info,_Title)
+		        # try:
+		            # _Z = ''
+		            # for keys in self._Info:
+		                # a = self._Info[keys]
+		                # if type(a)==list:
+		                    # for q in a:
+		                        # _Z += q+' '
+		                    # a = _Z
+		                # if keys=='Watchability':a = 'قابلية المشاهدة'.encode('utf-8')
+		                # if keys=='About The Movie':a = cyan+str(a)
+		                # else:a = str(keys)+'    :  '+cyan+str(a)
+		                # self['Box_'+str(i)].setText(a)
+		                # i = i +1
+		                # if i>9:break
+		            # self.watc = self._Info['Watchability']
+		            # self.watchBTn = True
+		        # except:
+		            # for tx in range(4,9):
+		                # v = '  .......'+List_Secour[tx-4]
+		                # self['Box_'+str(tx)].setText(v)
+	##############################
 	def ok(self):
-		self.AnimTimer.stop()
-		self.Import_My_Infos()
+		if self.Msg_[0]:
+		    self.Timer.stop()
+		    self.AnimTimer.stop()
+		    self.Import_My_Infos()
 	##############################
 	def exit(self, ret=None):
+		self.Timer.stop()
 		self.AnimTimer.stop()
 		self.close(True)
+	def Clear_Folder_Img(self):
+		Milef = '/media/hdd/Cimalek/Images/'
+		for root, dirs, files in os.walk(Milef):
+		    for f in files:
+		        os.unlink(os.path.join(root, f))
+		Taill_Fold = get_Taille()
+		self['Infos'].setText('Image File Size : \c0000????'+str(Taill_Fold))
