@@ -7,6 +7,17 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 warnings.simplefilter('ignore',InsecureRequestWarning)
 ########################################################################
 St = requests.Session()
+########################################################################
+from Plugins.Extensions.ShowMovies.Cimalek.OutilsCimalek.AllImport import *
+folder = '/media/hdd/Cimalek/Images'
+def get_Taille():
+    folder_size = 0
+    for (path, dirs, files) in os.walk(folder):
+        for file in files:
+            filename = os.path.join(path, file)
+            folder_size += os.path.getsize(filename)
+    Taille = "%0.1f MB" % (folder_size/(1024*1024.0))
+    return str(Taille)
 ########################################################################Clear Txt
 def ClearProf(data):
     LATIN_1_CHARS = (
@@ -41,7 +52,7 @@ def ClearProf(data):
         data = data.replace(_hex, _char)
     return data
 def ClearTitle(txt):
-    txt = txt.replace('&#8217;s','s-')
+    txt = txt.replace('&#8217;s','s-').replace('&#038;','-')
     txt = txt.replace('&#8217;','-')
     txt = txt.replace('- ','-')
     txt = txt.replace('- ','-')
@@ -53,6 +64,20 @@ def ClearTitle(txt):
     return txt
 ########################################################################Downloads Images
 _distI = '/media/hdd/Cimalek/Images/%s'
+def Downloads_Images_Home(uri,dist):
+    Repns = False
+    try:
+        response = St.get(uri, stream=True)
+        print 'response = ',response.status_code
+        if response.status_code == 200:
+            with open(dist, 'wb') as out_file:
+                shutil.copyfileobj(response.raw, out_file)
+            del response
+            Repns = True
+        else:Repns = False
+    except:
+        Repns = False
+    return Repns
 def Downloads_Images(uri,dist):
     Repns = False
     if  os.path.exists(dist):
@@ -159,12 +184,18 @@ def get_My_Donnees(url):
             title= 'title'
         try:
             rgx = '''<div class="desc">(.+?)</div>'''
-            desc = re.findall(rgx,block,re.M|re.I|re.DOTALL)[0].decode('utf-8')
+            desc = re.findall(rgx,block,re.M|re.I|re.DOTALL)#[0].decode('utf-8')
         except:
             desc= 'nada'
+        if desc!= 'nada':
+            dsc = ''
+            for a in desc:
+                dsc += a.decode('utf-8')+' '
+            desc = dsc
         MyDict_[Id]=[title,Href,img,nam_img,rating,quality,desc]
-    TXT = json.dumps(MyDict_)
-    return True,export_txt(TXT),pagination
+    TXT = json.dumps(MyDict_,indent = 4)
+    if len(MyDict_)==0:return False,'',''
+    else:return True,export_txt(TXT),pagination
 #######################################################################Import Info_Film
 def get_Info_Film(url):
     MyDict_ = {}
@@ -178,15 +209,26 @@ def get_Info_Film(url):
     except:blocks='nada'
     if blocks!='nada':
         try:
+            rgx = '''<span class="item rating">(.+?)</span>'''
+            rating = re.findall(rgx,Donnees,re.M|re.I|re.DOTALL)[0].replace(' ','')
+        except:rating='nada'
+        MyDict_['rating']=rating
+        try:
+            rgx = '''<img src="(.+?)".+?class="film-poster-img">'''
+            poster = re.findall(rgx,Donnees,re.M|re.I|re.DOTALL)[0].split('/')[-1]
+        except:poster='nada'
+        MyDict_['poster']=poster
+        try:
             rgx = '''<a href="(.+?)" class="watchBTn">'''
             watchBTn = re.findall(rgx,blocks,re.M|re.I|re.DOTALL)[0]
         except:watchBTn='nada'
-        MyDict_['watchBTn']=watchBTn
+        MyDict_['Watchability']=watchBTn
         try:
             rgx = '''<div class="text">(.+?)</div>'''
-            Discrpt = re.findall(rgx,blocks,re.M|re.I|re.DOTALL)[0]
+            Discrpt = re.findall(rgx,blocks,re.M|re.I|re.DOTALL)[0]#.decode('utf-8')
         except:Discrpt='nada'
-        MyDict_['Discrpt']=Discrpt
+        #print 'Discrpt ----> ',Discrpt
+        MyDict_['About The Movie']=Discrpt
         try:
             rgx = '''<span class="item-head">'''
             Discrpt_1 = blocks.split(rgx)
@@ -197,17 +239,19 @@ def get_Info_Film(url):
             Discrpt_2 = re.findall(gbx,blocks,re.M|re.I|re.DOTALL)
         except:Discrpt_2='nada'
         if Discrpt_2!='nada':
+            _KL = ''
             for f in Discrpt_2:
                 if 'href' in f:continue
-                Discrpt_3.append((f))
-                print f
-            MyDict_['Discrpt_2']=Discrpt_3
+                _KL += f+'\n'#Discrpt_3.append((f))
+                #print f
+        MyDict_['Film Properties']=_KL
+        #print 'Discrpt_2 ----> ',_KL
         try:
             gbx = '''<span class="text"><span>(.+?)</span> من <span>(.+?)</span></span>'''
             Rat = re.findall(gbx,Donnees,re.M|re.I|re.DOTALL)
             Rating = Rat[0][0]+'/'+Rat[0][1]
         except:Rating='nada'
-        MyDict_['Rating']=Rating
+        MyDict_['Rating2']=Rating
         try:
             gnx = '''<div class="item-list">(.+?)<div class="film-description w-hide">'''
             genres = re.findall(gnx,Donnees,re.S|re.M|re.I|re.DOTALL)[0]
@@ -220,12 +264,14 @@ def get_Info_Film(url):
                 if w=='' or w=='  ':continue
                 w = w.replace('\n','').replace('\t','').replace('\r','').replace('\n\n','')
                 _H += w.decode('utf-8')+' '
-            print _H
-            MyDict_['genre']=_H
+            #print _H
+        MyDict_['Genre']=_H
+        #print 'genre ----> ',_H
     return MyDict_
 #######################################################################Import watch Link
 def get_D1(url):
     MyListFilms = []
+    NewMyListFilms = []
     HDR = {'Host': 'w.cimalek.to',
            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0',
            'Accept': 'application/json, text/javascript, */*; q=0.01',
@@ -242,44 +288,59 @@ def get_D1(url):
            'Alt-Used': 'zorona.cam',
            'Connection': 'keep-alive',
            'Referer': 'https://w.cimalek.to/'}
-    rgx = '''<div id='player-option-.+?' class='btn lalaplay_player_option' data-type='(.+?)' data-post='(.+?)' data-nume='(.+?)'>'''
-    try:data = get_Data(url,get='get',typ='content')
-    except:data=''
+    rgx = '''<div id='player-option-.+?' class='btn lalaplay_player_option' data-type='(.+?)' data-post='(.+?)' data-nume='(.+?)'><ul><li>(.+?)</li>'''
+    try:data = get_Data(url,get='get',typ='content')#requests.get(url,verify=False).content#get_Data(url,get='get',typ='content')#requests.get(url,verify=False).content param=None,headers=None
+    except:data=''#get_Data(url,get='get',typ='content')
     if data:
         try:Donnees = re.findall(rgx,data)
         except: Donnees=''
         if Donnees:
             i = 1
-            for a,b,c in Donnees:#('Cloud_V1', '569243', '1')
+            for a,b,c,d in Donnees:#('Cloud_V1', '569243', '1')
                 link = "https://w.cimalek.to/wp-json/lalaplayer/v2/?p=%s&t=%s&n=%s" % (b,a,c)
-                try:_dat = get_Data(link,get='get',typ='json()',headers=HDR)
+                #print '/////////////////////',link param=None,headers=None
+                try:_dat = get_Data(link,get='get',typ='json()',headers=HDR)#requests.get(link,headers=HDR,verify=False).json()
                 except:_dat=''
                 if _dat:
                     _A = _dat['embed_url']
-                    try:NwDat = get_Data(_A,get='get',typ='content',headers=_Hd)
+                    #print '*****************', _A
+                    try:NwDat = get_Data(_A,get='get',typ='content',headers=_Hd)#requests.get(_A,headers=_Hd,verify=False).content
                     except:NwDat=''
+                    #print '+++++++++++++++',NwDat
                     if NwDat:
+                        #print "============================",NwDat
                         try:
-                            _rgx  = '''sources":\{"file":"(.+?)","label":"(.+?)"'''
+                            _rgx  = '''sources":\{"file":"(.+?)".+?"type":"(.+?)"'''
                             _file = re.findall(_rgx,NwDat)[0]
                             _file = _file.replace('\\','')
                         except:
                             try:
-                                _rgx = '''{"file":"(.+?)","label":"(.+?)","type"'''
+                                _rgx = '''{"file":"(.+?)".+?"type":"(.+?)"'''
+                                #_rgx  = '''\{"file":"(.+?)"'''
                                 _file = re.findall(_rgx,NwDat)
                             except:_file = 'nada'
                         try:
-                            _rgx1 ='''"sub_id":.+?,"language":"(.+?)",.+?,"file":"(.+?)"'''
+                            _rgx1 ='''"file":"(.+?)".+?"type":"(.+?)"'''
                             sub_id = re.findall(_rgx1,NwDat)
                         except:sub_id='nada'
                         if _file!='nada':
+                            typo = ''
                             for lnko,label in _file:
                                 lnko = lnko.replace('\\','')
-                                MyListFilms.append((label,lnko))
+                                label=label.replace('\\/','|')
+                                MyListFilms.append((d,lnko))
                         if sub_id!='nada':
-                            for lang,lnk in sub_id:
+                            typo = ''
+                            for lnk,lang in sub_id:
                                 lnk = lnk.replace('\\','')
-                                MyListFilms.append((lang,lnk))
+                                lang=lang.replace('\\/','|')
+                                MyListFilms.append((d,lnk))
                     else:print 'nada_NwDat'
-    if len(MyListFilms)!=0:return True,MyListFilms
+                    #print "===============================================",str(i)
+                    i = i + 1
+    if len(MyListFilms)!=0:
+        MyListFilms = list(set(MyListFilms))
+        # for a,b in MyListFilms:
+            # NewMyListFilms.append(show_LinkMovies(a,b))
+        return True,MyListFilms
     else:return False,[]
