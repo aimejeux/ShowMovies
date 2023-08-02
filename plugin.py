@@ -8,6 +8,24 @@ from Plugins.Extensions.ShowMovies.Cimalek.Home.Home import HomeShowMovies
 #########################################
 Ver = getversioninfo()#1.0
 #########################################
+import os,errno,shutil
+Fold_1 = '/media/hdd/Cimalek/Home'
+Fold_2 = '/media/hdd/Cimalek/Images'
+Fold_3 = '/media/hdd/Cimalek/i_0.png'
+Fold_4 = '/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/i_0.png'
+ListImage = [Fold_1,Fold_2]
+for fold in ListImage:
+    try:os.makedirs(fold)
+    except OSError as e:
+        if e.errno == errno.EEXIST:
+            print('Directory not created.')
+        else:raise
+try:
+    if os.path.exists(Fold_3):
+        print 'Img Exist'
+    else:shutil.copy(Fold_4,Fold_3)
+except:pass
+#########################################
 def main(session, **kwargs):
     if isHD():
         session.open(MessageBox, _('Skin is not supported\nShowMovies works only with FHD skins'), MessageBox.TYPE_ERROR)
