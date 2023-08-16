@@ -1,0 +1,17 @@
+<skin>
+<screen name="VirtualKeyBoard_1" position="0,0" size="1920,1080" zPosition="99" title="" backgroundColor="transparent" flags="wfNoBorder">
+<eLabel position="250,172" size="1263,45" font="Regular; 33" text="Show_Movies Virtual KeyBoard" halign="center" valign="center" transparent="0"  zPosition="3" />
+<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/CineMa/Images/imageskin/keylogo.png" position="1548,772" size="90,70" zPosition="1" />
+<widget source="country" render="Label" position="1525,881" size="145,50" font="Regular; 28" valign="center" halign="center" />
+<widget name="header" position="250,232" size="1263,45" font="Regular; 28" transparent="1" noWrap="1" backgroundColor="black" zPosition="2" />
+<widget name="text" position="250,282" size="1263,50" font="Regular; 36" transparent="0" noWrap="1" halign="center" backgroundColor="black" zPosition="2" />
+<widget name="list" position="250,340" size="1263,529" selectionDisabled="1" foregroundColor="white" backgroundColor="black" transparent="1" itemHeight="100" zPosition="2" />
+<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/CineMa/Images/imageskin/buttons.png" position="235,875" size="1288,56" alphatest="blend" zPosition="2" />
+<eLabel name="key_red" position="269,883" size="275,39" zPosition="2" font="Regular; 28" halign="center" valign="center" backgroundColor="black" transparent="0" foregroundColor="white" text="Exit" />
+<eLabel name="key_green" position="584,883" size="275,39" zPosition="2" font="Regular; 28" halign="center" valign="center" backgroundColor="black" transparent="0" foregroundColor="white" text="OK" />
+<eLabel name="key_yellow" position="899,883" size="275,39" zPosition="100" font="Regular; 28" halign="center" valign="center" backgroundColor="black" transparent="0" foregroundColor="white" text="Lang. Switch" />
+<eLabel name="key_blue" position="1214,883" size="275,39" zPosition="2" font="Regular; 28" halign="center" valign="center" backgroundColor="black" transparent="0" foregroundColor="white" text="Shift" />
+<eLabel position="1525,844" size="145,35" font="Regular; 27" text="Language" halign="center" transparent="0" />
+<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/CineMa/Images/imageskin/Plan_1.png" position="235,156" size="1288,775" zPosition="1" transparent="1" />
+</screen>
+</skin>

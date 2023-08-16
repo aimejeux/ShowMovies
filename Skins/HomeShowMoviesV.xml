@@ -1,0 +1,20 @@
+<screen name="HomeShowMovies" position="0,0" size="1920,1080" flags="wfNoBorder" title="" backgroundColor="transparent">
+    <widget name="menu" zPosition="4" foregroundColorSelected="white" position="500,700" size="0,1080" enableWrapAround="1" scrollbarMode="showNever" transparent="1" />
+    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/MenuV/MenuVerticale.png" position="0,0" size="1920,1080" alphatest="blend" zPosition="4" transparent="1" />
+    <widget name="Selct_0" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/MenuV/SettingV.png" position="17,288" size="450,70" zPosition="5" transparent="0" alphatest="blend" />
+    <widget name="Selct_1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/MenuV/MoviesV.png" position="17,383" size="450,70" zPosition="5" transparent="0" alphatest="blend" />
+    <widget name="Selct_2" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/MenuV/YearsV.png" position="17,479" size="450,70" zPosition="5" transparent="0" alphatest="blend" />
+    <widget name="Selct_3" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/MenuV/GenresV.png" position="17,577" size="450,70" zPosition="5" transparent="0" alphatest="blend" />
+    <widget name="Selct_4" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/MenuV/AnimationsV.png" position="17,671" size="450,70" zPosition="5" transparent="0" alphatest="blend" />
+    <widget name="Selct_5" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/MenuV/SeriesV.png" position="17,768" size="450,70" zPosition="5" transparent="0" alphatest="blend" />
+    <widget name="Selct_6" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/MenuV/SeasonsV.png" position="17,864" size="450,70" zPosition="5" transparent="0" alphatest="blend" />
+    <widget name="Selct_7" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/MenuV/EpisodesV.png" position="17,959" size="450,70" zPosition="5" transparent="0" alphatest="blend" />
+    <widget name="Version" position="35,200" size="700,50" zPosition="10" font="Regular;35" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="left" valign="bottom" />
+    <widget source="global.CurrentTime" render="Label" position="1736,187" size="210,75" backgroundColor="#80000000" noWrap="1" transparent="1" zPosition="5" foregroundColor="white" font="Regular;39" valign="center" halign="left">
+    <convert type="ClockToText">Format:%H:%M</convert>
+    </widget>
+    <eLabel position="1840,208" size="10,33" text=":" transparent="1" font="Regular;27" backgroundColor="#80000000" foregroundColor="white" valign="center" halign="center" zPosition="5" />
+    <widget source="global.CurrentTime" render="Label" position="1853,203" size="52,33" backgroundColor="#80000000" noWrap="1" transparent="1" zPosition="5" foregroundColor="white" font="Regular;27" valign="center" halign="left">
+    <convert type="ClockToText">Format:%S</convert>
+    </widget>
+</screen>

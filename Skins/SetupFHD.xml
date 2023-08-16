@@ -1,0 +1,30 @@
+<skin>
+<screen name="ShowMovies_Config" position="0,0" size="1920,1080" flags="wfNoBorder" title="" backgroundColor="transparent">
+    <ePixmap position="0,0" size="1920,1080" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/MenuSetting.png" zPosition="0" transparent="1" />
+	<widget name="Box_1" position="20,900" zPosition="4" size="732,150" font="Regular;34" foregroundColor="#ffffff" backgroundColor="#80000000" transparent="1" halign="center" valign="center" />
+	<widget name="Box_2" position="410,120" zPosition="4" size="1100,400" font="Regular;32" foregroundColor="white" backgroundColor="#80000000" transparent="1" halign="center" valign="center" />
+    <widget name="Box_3" position="20,840" zPosition="4" size="732,48" font="Regular;30" foregroundColor="#ffffff" backgroundColor="#80000000" transparent="1" halign="center" valign="center" />
+	<ePixmap position="20,840" size="732,48" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/SelectBlack.png" zPosition="0" transparent="1" />
+    <eLabel text="\c00??0000Exit" zPosition="4" position="850,290" size="147,50" font="Regular; 30" transparent="1" backgroundColor="black" halign="center" valign="center" />
+    <eLabel text="\c0000??00Save" zPosition="4" position="1250,290" size="147,50" font="Regular; 30" transparent="1" backgroundColor="black" halign="center" valign="center" />
+	<widget source="global.CurrentTime" render="Label" position="11,5" size="231,37" zPosition="5" font="Regular; 30" foregroundColor="#2eccfa" backgroundColor="black" transparent="1" halign="center">
+	<convert type="ClockToText">Format:%H:%M:%S</convert>
+	</widget>
+	<widget source="global.CurrentTime" render="Label" position="274,5" size="280,37" font="Regular; 28" halign="center" foregroundColor="#2eccfa" backgroundColor="black" transparent="1" zPosition="5">
+	<convert type="ClockToText">Format:%d. %B. %Y</convert>
+	</widget>
+    <widget name="config" position="20,290" size="732,550" scrollbarMode="showNever" zPosition="4" transparent="1" font="Regular; 28" foregroundColor="#fff4e6" foregroundColorSelected="#2ECCFA" backgroundPixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/SelectBlack.png" />
+    <ePixmap position="20,890" size="732,150" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/SelectBlack1.png" zPosition="0" transparent="1" />
+	<ePixmap position="770,290" size="732,48" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/SelectBlack.png" zPosition="0" transparent="1" />
+</screen>
+<!-- VirtualKeyBoard -->
+	<screen name="VirtualKeyBoard" title="Virtual keyboard" position="center,center" size="660,365" zPosition="99">
+		<widget name="prompt" position="15,10" size="630,25" font="Regular;50" noWrap="1" transparent="1" />
+		<ePixmap pixmap="buttons/vkey_text.png" position="10,40" size="640,50" alphatest="blend" zPosition="-4" />
+		<widget name="text" position="15,52" size="630,33" font="Regular;50" halign="right" noWrap="1" transparent="1" />
+		<widget name="list" position="15,95" size="630,225" backgroundColor="#001c2c5c" foregroundColor="window-fg" selectionDisabled="1" transparent="1" />
+		<widget name="locale" position="15,335" size="570,25" font="Regular;50" transparent="1" />
+		<widget name="mode" position="585,335" size="60,25" font="Regular;50" halign="right" transparent="1" valign="center" />
+		<widget name="language" position="0,0" size="0,0" font="Regular;50" transparent="1" />
+	</screen>
+</skin>

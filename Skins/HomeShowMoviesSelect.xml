@@ -1,5 +1,5 @@
-<screen name="HomeShowMoviesSelect" position="2,3" size="1920,1080" flags="wfNoBorder" title="Launcher" backgroundColor="transparent">
-    <widget name="menu" zPosition="10" backgroundPixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/BarSelect_1.png" selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/BarSelect.png" foregroundColorSelected="white" position="1500,200" size="350,350" enableWrapAround="1" scrollbarMode="showNever" transparent="0" />
+<screen name="HomeShowMoviesSelect" position="2,3" size="1920,1080" flags="wfNoBorder" title="Home Show Movies Select" backgroundColor="transparent">
+    <widget name="menu" zPosition="10" backgroundPixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/SelectBlack.png" selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/BarSelect.png" foregroundColorSelected="white" position="1400,100" size="500,350" enableWrapAround="1" scrollbarMode="showNever" transparent="0" />
     <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/MaiMenu.png" position="0,0" size="1920,1080" alphatest="blend" zPosition="1" transparent="1" />
     <widget name="Posters" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/i_0.png" alphatest="blend" position="5,0" size="500,750" zPosition="6" transparent="0" />
     <widget name="PostersHome" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/i_0.png" alphatest="blend" position="0,0" size="1920,1080" zPosition="2" transparent="1" />
@@ -13,7 +13,7 @@
 	<widget backgroundColor="CursorForeground" font="Regular;40" foregroundColor="#2ECCFA" position="1423,22" render="Label" size="500,50" source="global.CurrentTime" transparent="1" valign="center" halign="center" zPosition="4">
     <convert type="ClockToText">Format:%H:%M %p </convert>
     </widget>
-	<widget name="Img_star" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Cimalek/Images/stars/Starts.png" position="0,695" size="500,50" zPosition="4" transparent="0" alphatest="blend" />
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Cimalek/Images/stars/StartsT.png" position="0,695" size="500,50" alphatest="blend" zPosition="3" transparent="1" />
+	<widget name="Img_star" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/CineMa/Images/stars/Starts.png" position="0,695" size="500,50" zPosition="4" transparent="0" alphatest="blend" />
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/CineMa/Images/stars/StartsT.png" position="0,695" size="500,50" alphatest="blend" zPosition="3" transparent="1" />
 	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/cachehome.png" position="0,700" size="1920,700" alphatest="blend" zPosition="6" transparent="0" />
 </screen>
