@@ -2,16 +2,16 @@ from Plugins.Plugin import PluginDescriptor
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Components.Pixmap import Pixmap
-from Plugins.Extensions.ShowMovies.Cimalek.OutilsCimalek.AllImport import *
+from Plugins.Extensions.ShowMovies.CineMa.OutilsCineMa.AllImport import *
 from Plugins.Extensions.ShowMovies.TestMove import MenuShowMovies
-from Plugins.Extensions.ShowMovies.Cimalek.Home.Home import HomeShowMovies
+from Plugins.Extensions.ShowMovies.CineMa.Home.Home import HomeShowMovies
 #########################################
 Ver = getversioninfo()#1.0
 #########################################
 import os,errno,shutil
-Fold_1 = '/media/hdd/Cimalek/Home'
-Fold_2 = '/media/hdd/Cimalek/Images'
-Fold_3 = '/media/hdd/Cimalek/i_0.png'
+Fold_1 = '/media/hdd/CineMa/Home'
+Fold_2 = '/media/hdd/CineMa/Images'
+Fold_3 = '/media/hdd/CineMa/i_0.png'
 Fold_4 = '/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/i_0.png'
 ListImage = [Fold_1,Fold_2]
 for fold in ListImage:
