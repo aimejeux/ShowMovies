@@ -62,13 +62,17 @@ class m2list(MenuList):
         self.l.setFont(7, gFont('Regular', 28))
         self.l.setFont(8, gFont('Regular', 30))
 #########################################
+def show_SeasEpsod(Title):
+    res = [Title]
+    res.append(MultiContentEntryText(pos=(2, 2), size=(500, 50), font=5, text=Title, flags=RT_HALIGN_CENTER))
+    return res
 def show_Movies(Title):
     res = [Title]
-    res.append(MultiContentEntryText(pos=(2, 2), size=(500, 350), font=5, text=Title, color=0x707b7c, color_sel=0x08d3d3, flags=RT_HALIGN_CENTER))
+    res.append(MultiContentEntryText(pos=(2, 2), size=(500, 35), font=5, text=Title, flags=RT_HALIGN_CENTER))
     #res.append(MultiContentEntryText(pos=(670, 2), size=(668, 35), font=4, text=List_Y, flags=RT_HALIGN_LEFT))
     return res
 def show_Movies_2(Title):
     res = [Title]
-    res.append(MultiContentEntryText(pos=(2, 2), size=(350, 35), font=5, text=Title, color=0x707b7c, color_sel=0x08d3d3, flags=RT_HALIGN_CENTER))
+    res.append(MultiContentEntryText(pos=(2, 2), size=(500, 50), font=5, text=Title, flags=RT_HALIGN_CENTER))
     #res.append(MultiContentEntryText(pos=(670, 2), size=(668, 35), font=4, text=List_Y, flags=RT_HALIGN_LEFT))
     return res
