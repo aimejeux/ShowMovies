@@ -20,8 +20,10 @@ blue,green,red,yellow,cyan,magenta,ivory='\c000000??','\c0000??00','\c00??0000',
 #########################################
 dwidth = getDesktop(0).size().width()
 #########################################
-from Plugins.Extensions.ShowMovies.Cimalek.OutilsCimalek.AllImport import *
-from Plugins.Extensions.ShowMovies.Cimalek.OutilsCimalek.MyImportCimalek import *
+from Plugins.Extensions.ShowMovies.CineMa.OutilsCineMa.AllImport import *
+from Plugins.Extensions.ShowMovies.CineMa.OutilsCineMa.MyImportCima import *
+path = '/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/CineMa/FilsJs/Episodes.js'
+path1 = '/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/CineMa/FilsJs/Seasons.js'
 class HomeShowMoviesSelect(Screen):
 	def __init__(self, session, Mydict,Title):
 		if dwidth == 1280:
@@ -40,6 +42,8 @@ class HomeShowMoviesSelect(Screen):
 			"down": self.keyDown,
 			"up": self.keyUp,
 			'ok': self.ok,
+			'blue': self.Trailler,
+			'green': self.ShowMoviesSelect ,
 		}, -1)
 		Screen.__init__(self, session)
 		self.picload = ePicLoad()
@@ -50,17 +54,18 @@ class HomeShowMoviesSelect(Screen):
 		self.onLayoutFinish.append(self.ShowImage)
 		self.onLayoutFinish.append(self.TestRating)
 		self.onLayoutFinish.append(self.Show_Image_Home)
-		self.FoldImag = '/media/hdd/Cimalek/Images/'
-		self.homeImage = '/media/hdd/Cimalek/Home/home.'
+		self.FoldImag = '/media/hdd/CineMa/Images/'
+		self.homeImage = '/media/hdd/CineMa/Home/home.'
 		##############################Posters
 		self['Posters'] = Pixmap()
 		self['Img_star'] = Pixmap()
 		self['PostersHome'] = Pixmap()
 		##############################Ditc Infos
+		self.NewDictSaison = {}
 		self.Mydict = Mydict
 		############################## path for Posters
 		try:self.MyPath = self.FoldImag+self.Mydict.get('poster','')
-		except:self.MyPath = '/media/hdd/Cimalek/'+'i_0.png'
+		except:self.MyPath = '/media/hdd/CineMa/'+'i_0.png'
 		##############################Rating
 		try:self.Rating = self.Mydict.get('rating','')
 		except:self.Rating = 0
@@ -70,8 +75,11 @@ class HomeShowMoviesSelect(Screen):
 		##############################List
 		self.Move = False
 		self.Showss = False
+		self.Youtsss = False
 		self.List_Secour = ['الاسم الاصلي'.encode('utf-8'),'البلد المنشئ'.encode('utf-8'),'المدة'.encode('utf-8'),'تاريخ العرض'.encode('utf-8'),'اللغة'.encode('utf-8')]
 		##############################Start
+		try:self.Youtub = self.Mydict.get('Youtub','')
+		except:self.Youtub='....'
 		for x in range(7):
 		    changelist = ['original Name','Country','Presentation Date','Duration','Language']
 		    a = self.Mydict.items()[x][0].replace('About The Movie','')
@@ -84,7 +92,7 @@ class HomeShowMoviesSelect(Screen):
 		            for t in range(5):
 		                #e += '\c00??????'+changelist[t]+ ' : \c0000????'+d[t].replace('  ','')+'\n'
 		                e += '\c00??????'+changelist[t]+ ' : \c00????00'+d[t].replace('  ','')+'\n'
-						 
+		            e += '\c00??????'+'Youtub'+ ' : \c00????00'+self.Youtub
 		        except:
 		            for t in range(len(d)):#????00
 		                #e += ' \c0000????'+d[t].replace('  ','')+'\n'
@@ -152,17 +160,27 @@ class HomeShowMoviesSelect(Screen):
 		        picobject.instance.setPixmap(ptr)
 		        picobject.show()
 		        del self.picload
-	def ImportShowMovies(self):
+	def Trailler(self):
 		self['menu'].show()
 		self.menu = []
+		if self.Youtub=='nada':
+		    self.ImportShowMovies()
+		    return
+		Si,self.ListShows_1 = get_Youtub_link(self.Youtub)
+		if Si:
+		    self.ListShows_1 = self.ListShows_1
+		self.ImportShowMovies()
+	def ImportShowMovies(self):
 		if self.watchBTn=='nada':return
 		Si,self.ListShows = get_D1(self.watchBTn)
 		if Si:
-		    #self.menu = self.ListShows
-		    for a in self.ListShows:
-		        self.menu.append(show_Movies_2('\c00??????Watch - \c0000????'+a[0]))
-		    # self['menu'].l.setList(self.menu)
-		    # self['menu'].l.setItemHeight(35)
+		    if self.Youtub=='nada':self.ListShows_1 =self.ListShows
+		    else:self.ListShows_1 +=self.ListShows
+		    F = ''
+		    for a in self.ListShows_1:
+		        if 'Trailer' in a[0]:F = "\c0000??00Trailer \c0000????mp4|720p"
+		        else:F='\c00??????Watch - \c0000????'+a[0]
+		        self.menu.append(show_Movies_2(F))
 		    self.Move = True
 		    self.Showss = True
 		else:
@@ -170,21 +188,33 @@ class HomeShowMoviesSelect(Screen):
 		    self.Move = False
 		    self.Showss = False
 		self['menu'].l.setList(self.menu)
-		self['menu'].l.setItemHeight(35)
+		self['menu'].l.setItemHeight(50)
 		self.resizeList()
 	def resizeList(self):
-		a = 35*len(self.menu)
+		a = 50*len(self.menu)
 		self['menu'].instance.resize(eSize(500, a))#######185,278
 	def ShowMoviesSelect(self):
+		import urllib2
 		from enigma import eServiceReference
 		from Screens.InfoBar import InfoBar, MoviePlayer
+		from Plugins.Extensions.ShowMovies.CineMa.OutilsCineMa.MyImportCima import get_player
 		index = self['menu'].getSelectionIndex()
 		name = self.Title
-		stream_url = self.ListShows[index][1]
-		type_movies = self.ListShows[index][0]
-		if  stream_url.startswith('/hls2'): stream_url = 'https://s16.upstreamcdn.co'+stream_url
-		#self.session.open(MessageBox, _(str(type_movies)+'\n'+str(name)+'\n'+str(stream_url)), MessageBox.TYPE_INFO)
-		self.reference = eServiceReference(5002, 0, stream_url.encode('utf-8'))
+		rds = get_player()
+		#self.session.open(MessageBox, _('-------------'+str(self.ListShows_1[index])), MessageBox.TYPE_INFO)
+		#return
+		self.stream_url = self.ListShows_1[index][1]
+		if 'Trailer' not in self.ListShows_1[index][0]:
+		    Referer = self.ListShows_1[index][2]
+		    a,NvUrl = get_D2(self.stream_url,Referer,'V')
+		    if a:
+		        self.stream_url = NvUrl[0][1]
+		        #self.session.open(MessageBox, _('-------------'+str(self.stream_url)), MessageBox.TYPE_INFO)
+		    else:
+		        self.session.open(MessageBox, _('تعذر الوصول الى رابط المشاهدة'), MessageBox.TYPE_INFO)
+		        return
+		if  self.stream_url.startswith('/hls2'): self.stream_url = 'https://s16.upstreamcdn.co'+self.stream_url
+		self.reference = eServiceReference(rds, 0, str(self.stream_url))
 		self.reference.setName(name)
 		self.session.open(MoviePlayer,self.reference)
 	##############################keyDown
@@ -201,9 +231,8 @@ class HomeShowMoviesSelect(Screen):
 		if self.Move:self['menu'].pageUp()
 	##############################ok
 	def ok(self):
-		if self.Showss == False:self.ImportShowMovies()
+		if self.Showss == False:self.Trailler()#self.ImportShowMovies()
 		else:self.ShowMoviesSelect()
-		
 	##############################exit
 	def exit(self, ret=None):
 		self.close(True)
