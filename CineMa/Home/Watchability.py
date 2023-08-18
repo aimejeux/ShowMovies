@@ -50,6 +50,8 @@ class HomeShowMoviesSelect(Screen):
 		self.menu = []
 		self['menu'] = m2list([])
 		self['menu'].hide()
+		self["action"] = Label()
+		self["action"].hide()
 		self.onLayoutFinish.append(self.decodeImage)
 		self.onLayoutFinish.append(self.ShowImage)
 		self.onLayoutFinish.append(self.TestRating)
@@ -189,6 +191,7 @@ class HomeShowMoviesSelect(Screen):
 		    self.Showss = False
 		self['menu'].l.setList(self.menu)
 		self['menu'].l.setItemHeight(50)
+		self["action"].hide()
 		self.resizeList()
 	def resizeList(self):
 		a = 50*len(self.menu)
@@ -212,12 +215,23 @@ class HomeShowMoviesSelect(Screen):
 		        #self.session.open(MessageBox, _('-------------'+str(self.stream_url)), MessageBox.TYPE_INFO)
 		    else:
 		        self.session.open(MessageBox, _('تعذر الوصول الى رابط المشاهدة'), MessageBox.TYPE_INFO)
+		        self["action"].hide()
 		        return
 		if  self.stream_url.startswith('/hls2'): self.stream_url = 'https://s16.upstreamcdn.co'+self.stream_url
 		self.reference = eServiceReference(rds, 0, str(self.stream_url))
 		self.reference.setName(name)
 		self.session.open(MoviePlayer,self.reference)
+		self["action"].hide()
 	##############################keyDown
+	def StarDownload(self, txt, function):
+		self["action"].show()
+		self["action"].setText(txt)
+		self.timer = eTimer()
+		try:
+		    self.timer_conn = self.timer.timeout.connect(function)
+		except:
+		    self.timer.callback.append(function)
+		self.timer.start(1, True)
 	def keyDown(self):
 		if self.Move:self['menu'].down()
 	##############################keyUp
@@ -231,8 +245,12 @@ class HomeShowMoviesSelect(Screen):
 		if self.Move:self['menu'].pageUp()
 	##############################ok
 	def ok(self):
-		if self.Showss == False:self.Trailler()#self.ImportShowMovies()
-		else:self.ShowMoviesSelect()
+		if self.Showss == False:
+		    self.StarDownload(_("Wait Download Server ..."), self.Trailler)
+		    #self.Trailler()#self.ImportShowMovies()
+		else:
+		    self.StarDownload(_("Wait Download Server Movie..."), self.ShowMoviesSelect)
+		    #self.ShowMoviesSelect()
 	##############################exit
 	def exit(self, ret=None):
 		self.close(True)
