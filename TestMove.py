@@ -3,9 +3,11 @@
 from Screens.Screen import Screen
 from sys import version_info
 from Components.ActionMap import ActionMap
+from Components.Sources.StaticText import StaticText
 ##################################################################
-from enigma import getDesktop
+from enigma import getDesktop, eTimer,eServiceReference
 from Components.Label import Label
+import os,time
 ################################################ yasser
 black,white,gray='\c00000000','\c00??????','\c00808080'
 blue,green,red,yellow,cyan,magenta,ivory='\c000000??','\c0000??00','\c00??0000','\c00????00','\c0000????','\c00??00??','\c0???????'
@@ -17,7 +19,6 @@ from Plugins.Extensions.ShowMovies.CineMa.OutilsCineMa.AllImport import *
 from Plugins.Extensions.ShowMovies.CineMa.Home.Watchability import HomeShowMoviesSelect
 from Plugins.Extensions.ShowMovies.CineMa.Home.Seasons import HomeShowMoviesSeasons
 #########################################
-from enigma import eServiceReference
 #########################################
 #########################################
 dwidth = getDesktop(0).size().width()
@@ -42,13 +43,15 @@ class MenuShowMovies(Screen,ShowMovies_New):
 			"down": self.keyDown,
 			"up": self.keyUp,
 			'ok': self.ok,
-			'yellow': self.TestImdb,
+			#'yellow': self.TestImdb,
 			'green': self.Import_My_Watch_Url,
 			'blue': self.Import_second_Page,
-			#'yellow': self.Clear_Folder_Img,
+			#'yellow': self.animate_text,
 		}, -1)
 		if Url is not None:self.Url = Url
 		else:self.Url = None
+		self["action"] = Label()
+		self["action"].hide()
 		self.onLayoutFinish.append(self.AffichTitles)
 		self.affich_DEbut()
 	##############################
@@ -113,11 +116,20 @@ class MenuShowMovies(Screen,ShowMovies_New):
 		self.TestRating()
 		self.Moveframe()
 	##############################
+	def StarDownload(self, actiontext, function):
+		self["action"].show()
+		self["action"].setText(actiontext)
+		self.timer = eTimer()
+		try:
+		    self.timer_conn = self.timer.timeout.connect(function)
+		except:
+		    self.timer.callback.append(function)
+		self.timer.start(1, True)
 	def ok(self):
 		if self.Msg_[0]:
 		    self.Timer.stop()
 		    self.AnimTimer.stop()
-		    self.Import_My_Infos()
+		    self.StarDownload(_("Wait Download data..."), self.Import_My_Infos)
 	##############################
 	def exit(self, ret=None):
 		self.Timer.stop()
