@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import json,re,requests,os,shutil
+from Components.Sources.StaticText import StaticText
 ########################################################################
 import warnings
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -603,6 +604,8 @@ class ShowMovies_New():
         self['rating_Film'] = Label()
         self['Title_Film'] = Label()
         self['Qlt_Film'] = Label()
+        self['Date_Flm'] = Label()
+        self['Date_Flm'].hide()
         self['Infos'] = Label()
         self['Infos'].setText('wait ......... data download')
         #self['Infos'].hide()
@@ -625,8 +628,10 @@ class ShowMovies_New():
             self['ratingFlm_'+str(r)].setText('.......')
         for r in range(1,10):
             self['QltFlm_'+str(r)] = Label()
-            #self['QltFlm_'+str(r)].setText('.......')
             self['QltFlm_'+str(r)].hide()
+        for r in range(1,10):
+            self['DateFlm_'+str(r)] = Label()
+            self['DateFlm_'+str(r)].hide()
         self.NewListJS = {}
         self.NewDictSaison = {}
         ##############################Timer
@@ -652,7 +657,7 @@ class ShowMovies_New():
         p = self['poster_0'].instance.position()
         #self.y -= 2703
         self.y -= self.dy+50
-        self['poster_0'].instance.move(ePoint(15, self.y-770))
+        self['poster_0'].instance.move(ePoint(5, self.y-770))
         self['poster_1'].instance.move(ePoint(5, self.y-14))
         self['poster_2'].instance.move(ePoint(218, self.y-14))
         self['poster_3'].instance.move(ePoint(431, self.y-14))
@@ -672,6 +677,16 @@ class ShowMovies_New():
         self['QltFlm_7'].instance.move(ePoint(1283, self.y+250))
         self['QltFlm_8'].instance.move(ePoint(1496, self.y+250))
         self['QltFlm_9'].instance.move(ePoint(1709, self.y+250))
+		#######################################################
+        self['DateFlm_1'].instance.move(ePoint(5, self.y-75))
+        self['DateFlm_2'].instance.move(ePoint(218, self.y-75))
+        self['DateFlm_3'].instance.move(ePoint(431, self.y-75))
+        self['DateFlm_4'].instance.move(ePoint(644, self.y-75))
+        self['DateFlm_5'].instance.move(ePoint(857, self.y-75))
+        self['DateFlm_6'].instance.move(ePoint(1070, self.y-75))
+        self['DateFlm_7'].instance.move(ePoint(1283, self.y-75))
+        self['DateFlm_8'].instance.move(ePoint(1496, self.y-75))
+        self['DateFlm_9'].instance.move(ePoint(1709, self.y-75))
 		#######################################################
         self['Title_1'].instance.move(ePoint(5, self.y-50))
         self['Title_2'].instance.move(ePoint(218, self.y-50))
@@ -694,8 +709,10 @@ class ShowMovies_New():
         self['ratingFlm_8'].instance.move(ePoint(1496, self.y-14))
         self['ratingFlm_9'].instance.move(ePoint(1709, self.y-14))
         #######################################################
-        self['Title_Film'].instance.move(ePoint(15, self.y-215))
-        self['Qlt_Film'].instance.move(ePoint(15, self.y-175))
+        self['Date_Flm'].instance.move(ePoint(5, self.y-255))
+        self['Title_Film'].instance.move(ePoint(5, self.y-215))
+        self['Qlt_Film'].instance.move(ePoint(5, self.y-175))
+        
         if self.y > 792:#if self.y > self.y2:##
             self.Timer.start(10, True)
         else:
@@ -721,10 +738,13 @@ class ShowMovies_New():
                 self['QltFlm_'+str(r)].instance.move(ePoint(0, 1080))
             for x in range(1,10):
                 self['Title_'+str(x)].instance.move(ePoint(0, 1080))
+            for x in range(1,10):
+                self['DateFlm_'+str(x)].instance.move(ePoint(0, 1080))
             for r in range(10):
                 self['ratingFlm_'+str(r)].instance.move(ePoint(0, 1080))
             self['Title_Film'].instance.move(ePoint(0, 1080))
             self['Qlt_Film'].instance.move(ePoint(0, 1080))
+            self['Date_Flm'].instance.move(ePoint(0, 1080))
             self.Timer.start(10, True)
     #############################
     def getposi_image(self):
@@ -943,6 +963,8 @@ class ShowMovies_New():
             self['Qlt_Film'].setText(str(_J[6]))
         else:
             self['Qlt_Film'].setText(str(_J[5]))
+            self['Date_Flm'].show()
+            self['Date_Flm'].setText(str(_J[6]))
     def setText_Films(self):
         if self.Msg_[0]:
             #self['Infos'].setText('wait ......... data download')
@@ -953,6 +975,7 @@ class ShowMovies_New():
         _J = self.NewListJS.items()[index][1][4]
         _J = _J.replace('nada','..')
         self['ratingFlm_0'].setText(str(_J))
+        if 'episodes/' in self.Url or 'series/' in self.Url or 'seasons/' in self.Url:self['ratingFlm_0'].hide()
         if len(self.NewListJS)<10:
             self.setText_Films_2()
             return
@@ -968,8 +991,13 @@ class ShowMovies_New():
                 _G[4] = _G[4].replace('nada','...')
                 _G[5] = _G[5].replace('nada','...')
                 self['ratingFlm_'+str(x)].setText(str(_G[4]))
-                if 'episodes/' in self.Url or 'series/' in self.Url or 'seasons/' in self.Url:self['QltFlm_'+str(x)].setText(str(_G[6]))
-                else:self['QltFlm_'+str(x)].setText(str(_G[5]))
+                if 'episodes/' in self.Url or 'series/' in self.Url or 'seasons/' in self.Url:
+                    self['QltFlm_'+str(x)].setText(str(_G[6]))
+                    self['ratingFlm_'+str(x)].hide()
+                else:
+                    self['QltFlm_'+str(x)].setText(str(_G[5]))
+                    self['DateFlm_'+str(x)].show()
+                    self['DateFlm_'+str(x)].setText(str(_G[6]))
         elif index+10 > Y:
             Nw_List = range(index,Y+1)+[0,1,2,3,4,5,6,7,8]
             for x in range(1,10):
@@ -980,8 +1008,13 @@ class ShowMovies_New():
                 _G[4] = _G[4].replace('nada','...')
                 _G[5] = _G[5].replace('nada','...')
                 self['ratingFlm_'+str(x)].setText(str(_G[4]))
-                if 'episodes/' in self.Url or 'series/' in self.Url or 'seasons/' in self.Url:self['QltFlm_'+str(x)].setText(str(_G[6]))
-                else:self['QltFlm_'+str(x)].setText(str(_G[5]))
+                if 'episodes/' in self.Url or 'series/' in self.Url or 'seasons/' in self.Url:
+                    self['QltFlm_'+str(x)].setText(str(_G[6]))
+                    self['ratingFlm_'+str(x)].hide()
+                else:
+                    self['QltFlm_'+str(x)].setText(str(_G[5]))
+                    self['DateFlm_'+str(x)].show()
+                    self['DateFlm_'+str(x)].setText(str(_G[6]))
         else:
             try:
                 for x in range(1,10):
@@ -990,8 +1023,13 @@ class ShowMovies_New():
                     _G[4] = _G[4].replace('nada','...')
                     _G[5] = _G[5].replace('nada','...')
                     self['ratingFlm_'+str(x)].setText(str(_G[4]))
-                    if 'episodes/' in self.Url or 'series/' in self.Url or 'seasons/' in self.Url:self['QltFlm_'+str(x)].setText(str(_G[6]))
-                    else:self['QltFlm_'+str(x)].setText(str(_G[5]))
+                    if 'episodes/' in self.Url or 'series/' in self.Url or 'seasons/' in self.Url:
+                        self['QltFlm_'+str(x)].setText(str(_G[6]))
+                        self['ratingFlm_'+str(x)].hide()
+                    else:
+                        self['QltFlm_'+str(x)].setText(str(_G[5]))
+                        self['DateFlm_'+str(x)].show()
+                        self['DateFlm_'+str(x)].setText(str(_G[6]))
             except:
                 _G = self['menu'].getCurrent()[0]
                 #self.session.open(MessageBox, _(str(_G)+'\nindex ='+str(index)), MessageBox.TYPE_INFO)
@@ -1042,9 +1080,9 @@ class ShowMovies_New():
                 index = self['menu'].getSelectionIndex()
                 _H = self.NewListJS.items()[index][1]
                 a = _H[4]
-                x = 50*float(a)
+                x = 30*float(a)
                 b = "%.0f" % x
-                self['Img_star'].instance.resize(eSize(int(b), 50))
+                self['Img_star'].instance.resize(eSize(int(b), 30))
             except:self['Img_star'].instance.resize(eSize(0, 0))
         else:self['Img_star'].instance.resize(eSize(0, 0))
         #if self.showhide==False:
@@ -1068,6 +1106,7 @@ class ShowMovies_New():
             index = self['menu'].getSelectionIndex()
             _H = self.NewListJS.items()[index][1][1]
             if '/seasons/' in _H or '/series/' in _H:
+                self["action"].hide()
                 self.Import_My_Infos_Seasons()
                 return
             z,self._Info = get_Info_Film(_H)
@@ -1078,6 +1117,7 @@ class ShowMovies_New():
                 _Title = self['menu'].getCurrent()[0]
                 #self.session.open(MessageBox, _('-------------'+str(_H)), MessageBox.TYPE_INFO)
                 self.session.open(HomeShowMoviesSelect,self._Info,_Title)
+            self["action"].hide()
     def Import_My_Infos_Seasons(self):
         index = self['menu'].getSelectionIndex()
         self.S_H = self.NewListJS.items()[index][1][1]
