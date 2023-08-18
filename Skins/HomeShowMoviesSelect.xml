@@ -16,4 +16,6 @@
 	<widget name="Img_star" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/CineMa/Images/stars/Starts.png" position="0,695" size="500,50" zPosition="4" transparent="0" alphatest="blend" />
 	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/CineMa/Images/stars/StartsT.png" position="0,695" size="500,50" alphatest="blend" zPosition="3" transparent="1" />
 	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/Images/cachehome.png" position="0,700" size="1920,700" alphatest="blend" zPosition="6" transparent="0" />
+    <widget name="action" position="531,500" size="700,200" zPosition="3" font="Regular;40" foregroundColor="#2ECCFA" backgroundColor="#490a3d" transparent="1" halign="left" valign="center" />
+
 </screen>
