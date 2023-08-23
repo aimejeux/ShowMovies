@@ -117,7 +117,8 @@ class HomeShowMoviesSeasons(Screen,SeasonsEpisodes):
 		self.close(True)
 #############################################################
 class HomeShowMoviesEpisodes(Screen,):
-	def __init__(self, session, Mydict,MyDictSeas,Title,Poster,Rating):
+	def __init__(self, session, *args):
+	#def __init__(self, session, Mydict,MyDictSeas,Title,Poster,Rating):
 		if dwidth == 1280:
 		    with open(PLUGIN_PATH_SKIN + '/HomeShowMoviesEpisodes.xml', 'r') as f:
 		        self.skin = f.read()
@@ -144,7 +145,7 @@ class HomeShowMoviesEpisodes(Screen,):
 		self.onLayoutFinish.append(self.MyInfosEpisodes)
 		# ##############################Ditc Infos
 		self.NewDictSaison = {}
-		self.Mydict = Mydict
+		self.Mydict = args[0]#Mydict
 		self.picload = ePicLoad()
 		self.Showss = False
 		self.menu = []
@@ -152,7 +153,7 @@ class HomeShowMoviesEpisodes(Screen,):
 		for x in range(7):
 		    self['InfosFlm_'+str(x)] = Label()
 		############################## path for Posters
-		self.Poster = Poster
+		self.Poster = args[3]#Poster
 		self['Posters'] = Pixmap()
 		self['Img_star'] = Pixmap()
 		self.a = 0
@@ -160,12 +161,12 @@ class HomeShowMoviesEpisodes(Screen,):
 		try:self.MyPath = self.Poster
 		except:self.MyPath = '/media/hdd/CineMa/'+'i_0.png'
 		##############################Rating
-		try:self.Rating = Rating
+		try:self.Rating = args[4]#Rating
 		except:self.Rating = 0
-		self.Title = Title
+		self.Title = args[2]#Title
 		try:self.Youtub = self.Mydict.get('Youtub','')
 		except:self.Youtub='....'
-		self.MyDictSeasEp = MyDictSeas
+		self.MyDictSeasEp = args[1]#MyDictSeas
 		self.Import_MyInfosEpisodes()
 	##############################Start
 	def Import_MyInfosEpisodes(self):
@@ -327,7 +328,7 @@ class ShowEpisodes(Screen,):
 			"down": self.keyDown,
 			"up": self.keyUp,
 			'ok': self.ok,
-			#'green': self.Download_with_FreeDownloadYano
+			'green': self.Download_with_FreeDownloadYano
 		}, -1)
 		self.session = session
 		Screen.__init__(self, session)
@@ -343,7 +344,7 @@ class ShowEpisodes(Screen,):
 		#self.Showss = False
 		self.menu = []
 		self['menu'] = m2list([])
-		self['NewTestDw'] = StaticText()
+		self['NewTestDw'] = Label()
 		self['NewTestDw'].setText('.....................')
 		for x in range(7):
 		    self['InfosFlm_'+str(x)] = Label()
@@ -545,68 +546,8 @@ class ShowEpisodes(Screen,):
 		    TXT = json.dumps(self.MyDictJs,indent = 4)
 		    export_txt(TXT,path='/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/CineMa/FilsJs/DownloadMovies.js')
 		    if self.ImportYano==True:
-		        self.get_service()#FreeDownloadYano('download')
+		        FreeDownloadYano('download').getText()
 		        #AH = FreeDownloadYano('download')#.getText()
-		        #self['NewTestDw'].setText(str(AH))
+		        self['NewTestDw'].setText('Download File')
 		    else:self.session.open(MessageBox, 'File FreeDownloadYano Not Found', MessageBox.TYPE_INFO, timeout=10)
 		else:self.session.open(MessageBox, 'تعذر الوصول الى رابط المشاهدة لتحميل الملف', MessageBox.TYPE_INFO, timeout=10)
-	def Write_Js_Yano(self):
-		path = '/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/CineMa/FilsJs/DownloadMovies.js'
-		Dicremove = {'url':'nada','filename':'nada'}
-		with open(path,'w') as chcfg:
-		    json.dump(Dicremove, chcfg,ensure_ascii=False)
-		print "OK"
-	def get_service(self):
-		from Tools.Directories import fileExists
-		path = '/usr/lib/enigma2/python/Plugins/Extensions/ShowMovies/CineMa/FilsJs/DownloadMovies.js'
-		if fileExists(path):
-		    with open(path) as jsf:
-		        urljsdata=json.load(jsf)
-		    self.url      = urljsdata['url']
-		    self.filename = urljsdata['filename']
-		    if ".m3u8" in self.url:
-		        self.downloaded = "Problem With Downloading With .m3u8 File"
-		    self.get_downloadfile()
-		else:self.downloaded='Coucou____FreeDownloadYano File Not Found'
-	def get_downloadfile(self):
-		import requests
-		self.messg_1 = 'Problem With Downloading With FreeDownloadYano The Movie %s\n%s'
-		self.messg_2 = 'Problem With Downloading With FreeDownloadYano The Movie %s\n%s\n Stopped At%s'
-		self.messg_3 = 'Your Movie %s download is complete %s'
-		self.messg_3 = 'Your Movie %s download is complete %s'
-		self.Pourcentage = '0%'
-		#self.url = ''
-		#self.filename = ''
-		self.downloaded = 0
-		self.total = ''
-		self._Dat = ''
-		self.Titl = self.filename.split('/')[-1]
-		if self.url!='nada' and self.filename!='nada':
-		    self.url = self.url.split('#User-Agent=')[0]
-		    self.filename = self.filename.encode('utf-8')+'.mp4'
-		    with open(self.filename, 'wb') as f:
-		        response = requests.get(self.url,verify=False,stream=True)
-		        if response.ok:
-		            self.total = response.headers.get('content-length')
-		            if self.total is None:
-		                self.Pourcentage = self.messg_1 % (self.Titl,self.url)
-		                #web_info(self.Pourcentage)
-		            else:
-		                #self.downloaded = 0
-		                #web_info('Your Movie Taille %s Mo' % self.total)
-		                self.total = int(self.total)#/(1024*1024.0)
-		                for data in response.iter_content(chunk_size=max(int(self.total/10000), 1024*1024)):
-		                    self._Dat = data
-		                    self.downloaded += len(data)#/(1024*1024.0)
-		                    web_info(str(self.downloaded))#self['NewTestDw'].setText(str(self.downloaded))
-		                    f.write(data)
-		                    self.Pourcentage = "%0.2f MB" % float(self.downloaded)
-		                    if len(self._Dat) == self.downloaded:
-		                        self.messg_2 % (self.Titl,self.url,self.Pourcentage)
-		                    if (self.downloaded/self.total) >= 1:
-		                        web_info(self.messg_3 % (self.Titl,self.filename))
-		                        self.Write_Js_Yano()
-		        else:
-		            self.Pourcentage=self.messg_1 % (self.Titl,self.url)
-		else:
-		    self.Pourcentage=self.messg_1 % (self.Titl,self.url)
